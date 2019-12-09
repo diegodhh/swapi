@@ -1,26 +1,18 @@
 import React from 'react';
-import logo from './logo.svg';
+import ResponsiveLayout from './components/hoc/ResponsiveLayout';
+import PrimarySearchAppBar from './components/Header/index';
+import ScrollList from './components/ScrollList/index'
+import NavList from './components/NavList';
+import Character from './components/Character';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <> 
+   
+     <ResponsiveLayout Nav={NavList} Search={PrimarySearchAppBar} Scroll={ScrollList} Card={Character}/>
+     </>
+    )
 }
 
 export default App;
