@@ -44,6 +44,9 @@ export class Resource {
                 type: action.type,
                 payload: response.data 
               })
+              dispatch({   
+                type: actions.select_item 
+              })
         } catch(err) {
             this[actions.conection_error](dispatch, err)
         }

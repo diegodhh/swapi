@@ -4,9 +4,9 @@ import { object } from "prop-types";
 export class Resource {
     constructor(currentState={}) {
         
-        this.dataSchema = {name:''};
         
-        const {resourceName, fetchedPages,backUpSelectedItemIndex, displayList,searchField,displayName,selectedItem,selectedItemIndex, nextPageLink,fetchedData} = currentState;
+        
+        const {resourceName, fetchedPages, backUpSelectedItemIndex, displayList,searchField,displayName,selectedItem,selectedItemIndex, nextPageLink,fetchedData} = currentState;
         this._state = {}
         this._state.resourceName = resourceName || '';
         this._state.displayName = displayName || '';
@@ -20,7 +20,7 @@ export class Resource {
         this._state.fetching = false;
         this._state.fetchedPages = fetchedPages || [];
         this.ResourseName = 'Resource'
-        
+        this._state.dataSchema =  {name: String};
 
     }
     reducer = (action) => {
@@ -53,7 +53,7 @@ export class Resource {
     // select-item => become (in the middleware) select_item_by_index for the sinc data and populate_item for the async part 
     [actions.populate_item] = (action) => {
         // the item it's only replaces when the user is still selecting the same item. 
-        if (this._state.selectedItemIndex === action.payload.index && this._state.resourceName === action.payload.resourceName ) {
+        if (this._state.selectedItemIndex === action.payload.index && this._state.resourceName === action.payload.resourceName && Object.keys(action.payload.item.films[0])[0] !== 'msg' ) {
             this._state.selectedItem = action.payload.item;
             
         
@@ -64,7 +64,7 @@ export class Resource {
     }
     [actions.select_item_by_index] = (action) => {
        
-        const itemIndex= action.payload || this._state.selectedItemIndex;;
+        const itemIndex= action.payload !== undefined? action.payload : this._state.selectedItemIndex;;
         this._state.selectedItemIndex = itemIndex;
         const list = this._state.displayList;
         this._state.selectedItem = list[itemIndex];
@@ -180,13 +180,28 @@ export class Resource {
     // selectItem: 'select-item',
     // scrollBottom: 'scroll-bottom'
 }
-
+// this._state.dataSchema =  {name: String,
+//     height: Number,
+//     mass: String,
+//     hair_color: String,
+//     skin_color: String,
+//     eye_color: String,
+//     birth_year: String,
+//     gender: String,
+//     homeworld: String,
+//     films: Array
+//     } ;
 
 export class Characters extends Resource {
     constructor(currentState) {
         super(currentState)
-    
-        this.dataSchema = {name:''};
+        this._state.dataSchema =  {name: String,
+            height: Number,
+            mass: String,
+            eye_color: String,         
+            films: Array
+            } ;
+       
       
         this._state.resourceName = 'Characters'   
     }
@@ -200,11 +215,21 @@ export class Characters extends Resource {
 export class Movies extends Resource {
     constructor(currentState) {
         super(currentState)
-        this._state.dataSchema = {name:''}; 
+        this._state.dataSchema = {title: String, 
+        director: String, 
+        producer: String, 
+        release_date: Date}; 
         this._state.resourceName = 'Movies'
     }
     
 }
+
+// this._state.dataSchema = {title: String, 
+//     episode_id: Number, 
+//     opening_crawl:  String, 
+//     director: String, 
+//     producer: String, 
+//     release_date: Date}; 
 
 
 

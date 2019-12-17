@@ -14,7 +14,21 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import StarBorder from '@material-ui/icons/StarBorder';
 
 
-
+const schemaLoader= (schema, itemCallback,listCallback) =>{
+  const printSchema = [];
+  let index = 0;
+  for (const property in schema) {
+    
+    if (schema[property] !== Array) {
+      printSchema.push(itemCallback(property, index))
+    }
+    if (schema[property] === Array) {
+      printSchema.push(listCallback(property, index))
+    }
+    index++ 
+  }
+  return printSchema;
+}
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
@@ -32,7 +46,7 @@ const useStyles = makeStyles(theme => ({
 }
 }));
 
-export default function NestedList({data,icon}) {
+export default function NestedList({schema,item,icon}) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
 
@@ -42,47 +56,67 @@ export default function NestedList({data,icon}) {
 
   return (
     <List
-    
       component="nav"
       aria-labelledby="nested-list-subheader"
       subheader={
         <ListSubheader component="div" id="nested-list-subheader">
-          Nested List Items 
+          description 
         </ListSubheader>
       }
       className={classes.root}
     >
-      <ListItem button>
-    }
-          <ListItemIcon classes={{root:classes.iconParent}}>
-          <img src={icon}/>
-          <div> {JSON.stringify(data)} </div>
-        </ListItemIcon> 
-        <ListItemText primary={"Sent mail"} />
-      </ListItem>
-      <ListItem button>
-        <ListItemIcon classes={{root:classes.iconParent}}>
-          <img src={icon}/>
-        </ListItemIcon>
-        <ListItemText primary="Drafts" />
-      </ListItem>
-      <ListItem button onClick={handleClick}>
-        <ListItemIcon classes={{root:classes.iconParent}}>
-          <img src={icon}/>
-        </ListItemIcon>
-        <ListItemText primary="Inbox" />
-        {open ? <ExpandLess /> : <ExpandMore />}
-      </ListItem>
-      <Collapse in={open} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
-          <ListItem button className={classes.nested}>
-            <ListItemIcon>
-              <StarBorder />
-            </ListItemIcon>
-            <ListItemText primary="Starred" />
-          </ListItem>
-        </List>
-      </Collapse>
+      {
+        schemaLoader(schema, (key, index)=>{
+          if (index === 0) {
+            return null
+          } else {
+            return ( <ListItem button>
+        
+              <ListItemIcon classes={{root:classes.iconParent}}>
+              <img src={icon}/>
+         <div> {key} </div>
+            </ListItemIcon> 
+            <ListItemText primary={item?item[key]: 'loading'} />
+         </ListItem> )
+        }
+          }
+        ,
+        (key, index)=>{
+                  
+                  return(
+                  <> 
+                  <ListItem button onClick={handleClick}>
+                    <ListItemIcon classes={{root:classes.iconParent}}>
+                      <img src={icon}/>
+                    </ListItemIcon>
+                    <ListItemText primary={key} />
+                    {open ? <ExpandLess /> : <ExpandMore />}
+                  </ListItem>
+                  {!item? null: item[key].map((subItem, index)=>{
+            if (typeof(subItem) === 'string') {
+              return (<div> seré un spinner</div>)
+            } 
+            return (<> <Collapse in={open} timeout="auto" unmountOnExit>
+            <List key={subItem.name + subItem.director + index} component="div" disablePadding>
+              <ListItem button className={classes.nested}>
+                <ListItemIcon classes={{root:classes.iconParent}}>
+                  <img src={icon}/>
+                  {/* <StarBorder /> */}
+                </ListItemIcon>
+                <ListItemText primary={subItem.title || subItem.msg} />
+              </ListItem>
+            </List>
+          </Collapse>
+          </>) 
+            
+          })
+         
+        }
+                </>)
+        })
+     
+      }
+      
      
       
     </List>

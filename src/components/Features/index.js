@@ -6,7 +6,8 @@ import React from 'react';
 import {connect} from 'react-redux';
 import * as actionCreators  from '../../redux/actions/action-creators';
 
-const mapStateToProps = state => ({ selectedItem: state.data.current.selectedItem })
+const mapStateToProps = state => ({ selectedItem: state.data.current.selectedItem,
+  schema: state.data.current.dataSchema })
 
   const mapDispatchToProps = dispatch => {
     return {
@@ -26,27 +27,17 @@ const useStyles = makeStyles(theme => ({
 
 }))
 
-let data = `{"birth_year": "19 BBY",
-"eye_color": "Blue",
-"films": [
-    "https://swapi.co/api/films/1/"
-],
-"gender": "Male",
-"hair_color": "Blond",
-"height": "172",
-"homeworld": "https://swapi.co/api/planets/1/"}`
-data = JSON.parse(data);
 
 function Features(props) {
   const classes= useStyles()  
   return (
         <>
-        <main onClick={props.selectItemInsideDetail}className={classes.root}>
+        <main className={classes.root}>
          
         <Typography variant="h5" component="h2">
-         obi one quenobi
+          {props.selectedItem[Object.keys(props.selectedItem)[0]]}
          </Typography>
-          <NestedList data={props.selectedItem} icon={deathStar }/>
+          <NestedList item={props.selectedItem} schema={props.schema} icon={deathStar }/>
           </main> 
         </>
          

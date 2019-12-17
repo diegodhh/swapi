@@ -24,9 +24,14 @@ export const populateItem =({dispatch, getState}) => next => action => {
         })    
         if (data.selectedResource === 'Characters') { 
                 // has to populate the movie array
-               
-                const films = await item['films'].map(async (item, index)=>{
-                    try {
+                
+                try {
+                   const films = await item['films'].map(async (item, index)=>{
+                        if (item.indexOf('https') === -1){
+                            const err =new Error ({msg: 'alrredy fetched'});
+                            err.next = true;
+                            throw err 
+                        }
                         let response = await axios.get(item,
                             {
                               headers: {
@@ -35,14 +40,24 @@ export const populateItem =({dispatch, getState}) => next => action => {
                          
                         return response.data   
                        
-                    } catch(err) {
-                        return {msg: 'nodisponible'}
-                        alert('error')
-                    }
+                   
+                        
+                    
                   
                 })
-                
                 item['films']=await Promise.all(films)
+
+                } catch(err) {
+                    if (err.next) {
+                        next(action);
+                        return
+                    } else {
+                        dispatch({type:actions.conection_error, payload: err.msg})
+                    }
+                   
+                }
+                
+               
                 
                
                 dispatch({
