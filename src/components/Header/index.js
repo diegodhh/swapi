@@ -12,8 +12,16 @@ import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
+import {connect} from 'react-redux';
+import * as actionCreators  from '../../redux/actions/action-creators';
 
+const mapStateToProps = state => ({ searchField: state.data.current.searchField })
 
+  const mapDispatchToProps = dispatch => {
+    return {
+      searchItem: actionCreators.searchItem,
+    }
+  }
 const useStyles = makeStyles(theme => ({
   grow: {
     flexGrow: 1,
@@ -76,14 +84,17 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function PrimarySearchAppBar() {
+function PrimarySearchAppBar(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
+  
+  
+  
+  
   const handleProfileMenuOpen = event => {
     setAnchorEl(event.currentTarget);
   };
@@ -177,7 +188,7 @@ export default function PrimarySearchAppBar() {
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
-            <InputBase
+            <InputBase onChange={(e)=>props.searchItem(e.target.value) } value={props.searchField}
               placeholder="Search…"
               classes={{
                 root: classes.inputRoot,
@@ -227,3 +238,8 @@ export default function PrimarySearchAppBar() {
     </div>
   );
 }
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PrimarySearchAppBar)

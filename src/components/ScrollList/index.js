@@ -1,9 +1,21 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
+import {connect} from 'react-redux'
+import * as actionCreators  from '../../redux/actions/action-creators';
+
+const mapStateToProps = state => ({ currentList: state.data.current.displayList })
+
+  const mapDispatchToProps = dispatch => {
+    return {
+      selectItem: actionCreators.selectItem,
+      fetchMore: actionCreators.fetchMore
+    }
+  }
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -24,18 +36,27 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function ScrollList() {
-  const classes = useStyles();
+function ScrollList(props) {
+  
 
+   
+  
+  
+  const classes = useStyles();
+  const tag = props.currentList.length? Object.keys(props.currentList[0])[0] : 'Loading'; 
+ 
+  
   return (
-    <List className={classes.root} subheader={<li />}>
-      {[0, 1, 2, 3, 4].map(sectionId => (
-        <li key={`section-${sectionId}`} className={classes.listSection}>
+
+
+    <List  className={classes.root} subheader={<li />}>
+      {[tag].map(sectionId => (
+        <li  key={`section-${sectionId}`} className={classes.listSection}>
           <ul className={classes.ul}>
-            <ListSubheader>{`I'm sticky ${sectionId}`}</ListSubheader>
-            {[0, 1, 2].map(item => (
+            <ListSubheader>{`${sectionId}`}</ListSubheader>
+            {props.currentList.map((item, index) => (
               <ListItem key={`item-${sectionId}-${item}`}>
-                <ListItemText primary={`Item ${item}`} />
+                <ListItemText onClick={()=>{props.selectItem(index)}} primary={item[Object.keys(item)[0]]} />
               </ListItem>
             ))}
           </ul>
@@ -44,3 +65,10 @@ export default function ScrollList() {
     </List>
   );
 }
+
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ScrollList)
+

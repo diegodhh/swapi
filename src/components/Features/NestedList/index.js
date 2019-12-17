@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
 }
 }));
 
-export default function NestedList({icon}) {
+export default function NestedList({data,icon}) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
 
@@ -42,20 +42,23 @@ export default function NestedList({icon}) {
 
   return (
     <List
+    
       component="nav"
       aria-labelledby="nested-list-subheader"
       subheader={
         <ListSubheader component="div" id="nested-list-subheader">
-          Nested List Items
+          Nested List Items 
         </ListSubheader>
       }
       className={classes.root}
     >
       <ListItem button>
+    }
           <ListItemIcon classes={{root:classes.iconParent}}>
           <img src={icon}/>
+          <div> {JSON.stringify(data)} </div>
         </ListItemIcon> 
-        <ListItemText primary="Sent mail" />
+        <ListItemText primary={"Sent mail"} />
       </ListItem>
       <ListItem button>
         <ListItemIcon classes={{root:classes.iconParent}}>
@@ -80,6 +83,8 @@ export default function NestedList({icon}) {
           </ListItem>
         </List>
       </Collapse>
+     
+      
     </List>
   );
 }
