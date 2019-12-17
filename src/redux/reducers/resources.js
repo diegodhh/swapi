@@ -48,7 +48,7 @@ const swapCurrent = (data, action)=>{
   }
   data.selectedResource = action.payload
   /// cleaning the searchField in the swap;
-  data.current.searchField = '';
+ 
   return {...data}
 
 }

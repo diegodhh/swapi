@@ -12,6 +12,7 @@ import SendIcon from '@material-ui/icons/Send';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import StarBorder from '@material-ui/icons/StarBorder';
+import CircularIndeterminate from './../../spiner';
 
 
 const schemaLoader= (schema, itemCallback,listCallback) =>{
@@ -46,11 +47,12 @@ const useStyles = makeStyles(theme => ({
 }
 }));
 
-export default function NestedList({schema,item,icon}) {
+export default function NestedList({schema,item,icon, select}) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
 
   const handleClick = () => {
+    
     setOpen(!open);
   };
 
@@ -94,11 +96,11 @@ export default function NestedList({schema,item,icon}) {
                   </ListItem>
                   {!item? null: item[key].map((subItem, index)=>{
             if (typeof(subItem) === 'string') {
-              return (<div> seré un spinner</div>)
+              return (<CircularIndeterminate/>)
             } 
             return (<> <Collapse in={open} timeout="auto" unmountOnExit>
             <List key={subItem.name + subItem.director + index} component="div" disablePadding>
-              <ListItem button className={classes.nested}>
+              <ListItem onClick={()=>select(subItem.title)}button className={classes.nested}>
                 <ListItemIcon classes={{root:classes.iconParent}}>
                   <img src={icon}/>
                   {/* <StarBorder /> */}

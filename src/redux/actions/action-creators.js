@@ -76,7 +76,7 @@ const {fetch_data,fetch_more, select_resource, select_item,search_item} = action
   }
   export const selectItemInsideDetail = (value) => {
    
-   value='Attack of the Clones'
+  
    dispatch ({type:actions.select_item_inside_detail,
    payload: value})
    

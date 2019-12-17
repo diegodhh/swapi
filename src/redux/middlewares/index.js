@@ -53,6 +53,7 @@ export const populateItem =({dispatch, getState}) => next => action => {
                         return
                     } else {
                         dispatch({type:actions.conection_error, payload: err.msg})
+
                     }
                    
                 }
@@ -63,6 +64,7 @@ export const populateItem =({dispatch, getState}) => next => action => {
                 dispatch({
                     type: actions.populate_item, payload: {index: itemIndex, item, resourceName: data.current.resourceName}
                 }) 
+
             }
             
     
@@ -103,6 +105,7 @@ export const changeScreenAndSearch =({dispatch, getState}) => next => action => 
                             }
                             if (data.current.fetchedData && data.selectedResource === 'Movies') {
                                 dispatch({type: actions.search_item, payload: searchStr})
+                                dispatch ({type:actions.select_item})
                                 
                             } else {
                                 

@@ -1,5 +1,5 @@
 import NestedList from './NestedList'
-
+import CircularIndeterminate from './../spiner';
 import {makeStyles, Typography } from '@material-ui/core';
 import deathStar from './../../img/death-star.svg'
 import React from 'react';
@@ -7,7 +7,7 @@ import {connect} from 'react-redux';
 import * as actionCreators  from '../../redux/actions/action-creators';
 
 const mapStateToProps = state => ({ selectedItem: state.data.current.selectedItem,
-  schema: state.data.current.dataSchema })
+  schema: state.data.current.dataSchema, fetching : state.data.current.fetching })
 
   const mapDispatchToProps = dispatch => {
     return {
@@ -30,6 +30,9 @@ const useStyles = makeStyles(theme => ({
 
 function Features(props) {
   const classes= useStyles()  
+  if (props.fetching) {
+   return (<CircularIndeterminate/>) 
+  }
   return (
         <>
         <main className={classes.root}>
@@ -37,7 +40,7 @@ function Features(props) {
         <Typography variant="h5" component="h2">
           {props.selectedItem[Object.keys(props.selectedItem)[0]]}
          </Typography>
-          <NestedList item={props.selectedItem} schema={props.schema} icon={deathStar }/>
+          <NestedList item={props.selectedItem} select={props.selectItemInsideDetail}schema={props.schema} icon={deathStar }/>
           </main> 
         </>
          
