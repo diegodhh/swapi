@@ -11,13 +11,16 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function CircularIndeterminate() {
+export default function CircularIndeterminate({size}) {
   const classes = useStyles();
+  let sizeObject;
+  if (!size) {
+     sizeObject=null;
+  }
 
   return (
     <div className={classes.root}>
-      <CircularProgress />
-      <CircularProgress color="secondary" />
+      <CircularProgress color="primary" {...sizeObject}  />
     </div>
   );
 }

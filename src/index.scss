@@ -1,0 +1,73 @@
+.laser-scroll-bar {
+    
+    &::-webkit-scrollbar {
+        width: 4px;
+     
+      }
+      
+      /* Track */
+      
+      
+      
+      &::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 5px rgba(158, 156, 156, 1); 
+        border-radius: 10px;
+      }
+       
+      /* Handle */
+      &::-webkit-scrollbar-thumb {
+        background: #9B8600 ; 
+        box-shadow: 2px -2px 84px 0px #9B8600;
+       
+        
+      }
+      
+      /* Handle on hover */
+      &::-webkit-scrollbar-thumb:hover {
+        background: #b30000; 
+      }
+  }
+body {
+  
+    background-image: url("./img/stars-background.jpg");
+    background-repeat: repeat;
+    
+    & > * {
+        
+        //backdrop-filter: blur(1.2px) brightness(60%);; 
+    }
+    
+    
+    
+}
+
+
+@font-face {
+    font-family: 'jediFont';
+    font-style: normal;
+    font-weight: 400;
+    src: url('./fonts/Starjedi.ttf') format('truetype'); /* Safari, Android, iOS */
+     
+  }
+
+
+  .color-primary-0 { color: #FEDC00 }	/* Main Primary color */
+  .color-primary-1 { color: #FFDD00 }
+  .color-primary-2 { color: #FFDD00 }
+  .color-primary-3 { color: #CDB100 }
+  .color-primary-4 { color: #9B8600 }
+  
+  .color-secondary-1-0 { color: #00AE64 }	/* Main Secondary color (1) */
+  .color-secondary-1-1 { color: #00F18A }
+  .color-secondary-1-2 { color: #00E885 }
+  .color-secondary-1-3 { color: #008C50 }
+  .color-secondary-1-4 { color: #006A3D }
+  
+  .color-secondary-2-0 { color: #FC0006 }	/* Main Secondary color (2) */
+  .color-secondary-2-1 { color: #FF0007 }
+  .color-secondary-2-2 { color: #FE0007 }
+  .color-secondary-2-3 { color: #CB0005 }
+  .color-secondary-2-4 { color: #9A0004 }
+
+ 
+  

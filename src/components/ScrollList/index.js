@@ -8,15 +8,17 @@ import {connect} from 'react-redux'
 import * as actionCreators  from '../../redux/actions/action-creators';
 import CircularIndeterminate from './../spiner';
 import Collapse from '@material-ui/core/Collapse';
-
+import clsx from 'clsx';
 
 
 const mapStateToProps = state => ({ currentList: state.data.current.displayList,
-fetching: state.data.current.fetching })
+  selectedItemIndex: state.data.current.selectedItemIndex,
+fetching: state.data.current.fetching,fetching: state.data.current.fetching, fetchedPages: state.data.current.fetchedPages })
 
   const mapDispatchToProps = dispatch => {
     return {
       selectItem: actionCreators.selectItem,
+     
       fetchMore: actionCreators.fetchMore
     }
   }
@@ -25,16 +27,29 @@ fetching: state.data.current.fetching })
 const useStyles = makeStyles(theme => ({
   
   root: {
+    
+    borderRadius: theme.layout.borderRadius,
     marginBottom: '10px',
     width: '100%',
     maxWidth: '100%',
     backgroundColor: theme.palette.background.paper,
     position: 'relative',
     overflow: 'auto',
-    height: '80vh'
+    height: '85vh',
+    textTransform: "uppercase",
+    fontWeight: 800,
+    color: ' white',
+    opacity: theme.palette.opacity
   },
   listSection: {
     backgroundColor: 'inherit',
+  },
+  selectedItem: {
+    backgroundColor : theme.palette.primary.dark,
+    fontWeight: 800,
+    '&:hover': {
+      background: theme.palette.primary.dark,
+    }
   },
   ul: {
     backgroundColor: 'inherit',
@@ -46,18 +61,29 @@ const ScrollList = (props) => {
   const listElement = useRef(null)
 
 useEffect(() => {
-  
-  return () => {
-    const overFlow = listElement.current.clientWidth < listElement.current.scrollWidth || listElement.current.clientHeight < listElement.current.scrollHeight
+ 
+  const overFlow = listElement.current.clientWidth < listElement.current.scrollWidth || listElement.current.clientHeight < listElement.current.scrollHeight
+   
     if (!overFlow) {
-      setTimeout(()=>{
+      if ( !props.fetching && props.fetchedPages.length === 0) {
        
-        props.fetchMore()
-      }, 5000)
-     
+        setTimeout(()=>{
+          if (!props.fetching && props.fetchedPages.length === 0) {
+            props.fetchMore()
+          }
+        }, 5000)
+      }
     }
-  };
-}, [])
+        
+      
+  
+    
+    return ()=>{
+      
+    }
+  
+ 
+}, [props])
   
   
   const [onBottom, setBottom] = useState(false)
@@ -66,7 +92,7 @@ useEffect(() => {
  
   const handleScroll = useCallback((e) =>{
     
-    const bottom = e.target.scrollHeight - e.target.scrollTop <= e.target.clientHeight;
+    const bottom = e.target.scrollHeight - e.target.scrollTop <= 20 + e.target.clientHeight;
     
     
     if (e.target.scrollHeight - e.target.scrollTop -20>= e.target.clientHeight) {
@@ -75,6 +101,7 @@ useEffect(() => {
    
       
     if (bottom && !props.fetching) { 
+      
         setBottom(true)
         props.fetchMore()
        }
@@ -91,18 +118,24 @@ useEffect(() => {
   return (
 
 
-    <List ref={listElement} onScroll={handleScroll} className={classes.root} subheader={<li />}>
+    <List ref={listElement} onScroll={handleScroll} className={clsx(classes.root, 'laser-scroll-bar')} subheader={<li />}>
       {[tag].map(sectionId => (
         <li  key={`section-${sectionId}`} className={classes.listSection}>
           
             <ListSubheader>{`${sectionId}`}</ListSubheader>
-            {props.currentList.map((item, index) => (
-              <ul key={`item-${sectionId}-${item[Object.keys(item)[0]]}`} className={classes.ul}>
-              <ListItem button key={`item-${sectionId}-${item[Object.keys(item)[0]]}`}>
-                <ListItemText onClick={()=>{props.selectItem(index)}} primary={item[Object.keys(item)[0]]} />
-              </ListItem>
-             </ul>
-            ))}
+            {props.currentList.map((item, index) => {
+              let ifSelected;
+              if (index === props.selectedItemIndex) {
+                ifSelected = {classes : {root: classes.selectedItem}}
+              }
+              return (
+                <ul key={`item-${sectionId}-${item[Object.keys(item)[0]]}`} className={classes.ul}>
+                <ListItem {...ifSelected} button key={`item-${sectionId}-${item[Object.keys(item)[0]]}`}  onClick={()=>{props.selectItem(index)}}>
+                  <ListItemText   primary={item[Object.keys(item)[0]]} />
+                </ListItem>
+               </ul>
+              )
+            })}
              
              {
               ( <Collapse in={onBottom} collapsedHeight={0}>

@@ -1,19 +1,18 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withTheme } from '@material-ui/core/styles';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import DraftsIcon from '@material-ui/icons/Drafts';
-import SendIcon from '@material-ui/icons/Send';
+
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import StarBorder from '@material-ui/icons/StarBorder';
+
 import CircularIndeterminate from './../../spiner';
 
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 const schemaLoader= (schema, itemCallback,listCallback) =>{
   const printSchema = [];
@@ -31,21 +30,48 @@ const schemaLoader= (schema, itemCallback,listCallback) =>{
   return printSchema;
 }
 const useStyles = makeStyles(theme => ({
+  
   root: {
+    
     width: '100%',
     maxWidth: '100%',
     backgroundColor: theme.palette.background.paper,
+    textTransform: "uppercase",
+    fontWeight: 800,
+    color: ' white'
   },
   nested: {
     paddingLeft: theme.spacing(4),
   },
   iconParent: {
+    flex: '1 0 0',
     '& > img': {
+      
       width: 24,
       height: 24
+    }},
+    featuresItem:{
+      
+      display: 'flex',
+      justifyContent: 'space-around',
+      '& > *': {
+        
+        flex: '0 0 0'
+      }
+    
+  
+    },featuresItemText:{
+      textTransform: "uppercase",
+      
+      
+      flex: '1 0 0'  
+    },featuresItemProperty:{
+      textTransform: "uppercase",
+      fontWeight: 800,
+      color: 'white',
+      flex: '1 0 0' 
     }
-}
-}));
+  }));
 
 export default function NestedList({schema,item,icon, select}) {
   const classes = useStyles();
@@ -72,13 +98,16 @@ export default function NestedList({schema,item,icon, select}) {
           if (index === 0) {
             return null
           } else {
-            return ( <ListItem button>
+            return ( 
+            <ListItem classes={{root: classes.featuresItem}}>
         
               <ListItemIcon classes={{root:classes.iconParent}}>
               <img src={icon}/>
-         <div> {key} </div>
-            </ListItemIcon> 
-            <ListItemText primary={item?item[key]: 'loading'} />
+         
+            </ListItemIcon>
+            
+            <ListItemText classes={{root: classes.featuresItemText}} primary={item?key: 'loading'} />
+            <ListItemText classes={{root: classes.featuresItemProperty}} primary={item?item[key]: 'loading'} />
          </ListItem> )
         }
           }

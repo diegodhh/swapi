@@ -56,8 +56,9 @@ function ResponsiveLayout({Nav, Search, Scroll,Card}) {
   }
   function mobileLayout(isPhone) {
     if (isPhone) {
-      return ( <Grid container spacing={1}>
-      <Nav/>
+      return ( 
+      <Grid container spacing={1}>
+        <Nav/>
       <Search/>
             <Grid item xs={4}>
                 
@@ -102,8 +103,31 @@ function ResponsiveLayout({Nav, Search, Scroll,Card}) {
   return (
         <>
     <div className={classes.root}>
-      {desktopLayout(matches)}
-      {mobileLayout(!matches)} 
+     <Grid container spacing={1}>
+        <Grid item xs={2}>
+            
+                  <Nav/>
+              
+        </Grid> 
+        
+        
+        <Grid item xs={6}>
+              <Grid item xs={12}>
+                      <Search/>
+              </Grid>
+              <Grid item xs={12}>
+                      <Scroll/>
+              </Grid>
+              
+        </Grid> 
+        
+        
+        <Grid item xs={4}>  
+          <Card/>
+        
+        
+        </Grid>  
+    </Grid>      
     </div>
       
    </>

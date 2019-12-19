@@ -13,6 +13,7 @@ import {connect} from 'react-redux';
       selectResource: actionCreators.selectResource
     }
   }
+  const mapStateToProps = ({data}) => ({ selectedResource: data.selectedResource})
 
 
 
@@ -21,20 +22,30 @@ import {connect} from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    
+    borderRadius: theme.layout.borderRadius,
+    opacity: theme.palette.opacity,
+    height: theme.layout.appHeight,
     width: '100%',
     maxWidth: '100%',
     backgroundColor: theme.palette.background.paper,
-  },
-  multiList: {
+    textTransform: "uppercase",
+    fontWeight: 800,
+    color: 'white', 
     [theme.breakpoints.down('sm')]: {
-      display: 'flex',
-    }
+      position: 'fixed',
+      top: '0px' , 
+      left: '0px' ,
+      zIndex: 1000 }
+
   },
-  flexCenter: {
-    [theme.breakpoints.down('sm')]: {
-      display: 'flex',
-      justifyContent: 'center'
+  fontStyle: {
+    fontFamily: 'jediFont',
+  },
+  selectedItem: {
+    backgroundColor : theme.palette.primary.dark,
+    fontWeight: 800,
+    '&:hover': {
+      background: theme.palette.primary.dark,
     }
   }
 }));
@@ -49,17 +60,21 @@ function Nav(props) {
       
     props.selectResource('Characters')
     
-  })
+  },[])
   return (
     <nav className={classes.root}>
-    
+      
       <List classes={{root: classes.flexCenter}} component="nav" aria-label="secondary mailbox folders">
-        <ListItem onClick={()=>{props.selectResource('Characters')}} classes={{root: classes.flexCenter}} button>
-          <ListItemText  primary="Personajes" />
-        </ListItem>
-        <ListItem onClick={()=>{props.selectResource('Movies')}} classes={{root: classes.flexCenter}} button>
-          <ListItemText  primary="Peliculas" />
-        </ListItem>
+      {['Characters','Movies'].map((resource, key)=>{
+        let selected;
+        if (resource === props.selectedResource) {
+          selected = {classes: {root: classes.selectedItem}}
+        }
+        return (<ListItem {...selected} key={`${resource} ${key}`} onClick={()=>{props.selectResource(resource)}} button>
+                  <ListItemText key={`${resource} ${key}`} classes={{root: classes.fontStyle}}  primary={resource} />
+                </ListItem>)
+      })}
+       
         {/* <ListItemLink classes={{root: classes.flexCenter}}href="#simple-list">
           <ListItemText classes={{root: classes.flexCenter}} secondary="Spam" />
         </ListItemLink> */}
@@ -70,7 +85,7 @@ function Nav(props) {
 
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(Nav)
 

@@ -10,12 +10,14 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import MenuIcon from '@material-ui/icons/Menu';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import {connect} from 'react-redux';
 import * as actionCreators  from '../../redux/actions/action-creators';
 
-const mapStateToProps = state => ({ searchField: state.data.current.searchField })
+const mapStateToProps = state => ({ searchField: state.data.current.searchField,
+  resource: state.data.selectedResource })
 
   const mapDispatchToProps = dispatch => {
     return {
@@ -23,6 +25,11 @@ const mapStateToProps = state => ({ searchField: state.data.current.searchField 
     }
   }
 const useStyles = makeStyles(theme => ({
+  appBar:{
+    height: '10vh',
+    backgroundColor: theme.palette.background.paper,
+    borderRadius: theme.layout.borderRadius
+  },
   grow: {
     flexGrow: 1,
   },
@@ -30,6 +37,9 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(2),
   },
   title: {
+    fontFamily: theme.typography.titles,
+    color: theme.palette.primary.main,
+    fontWeight: 600,
     display: 'none',
     [theme.breakpoints.up('sm')]: {
       display: 'block',
@@ -171,18 +181,18 @@ function PrimarySearchAppBar(props) {
 
   return (
     <div className={classes.grow}>
-      <AppBar position="static">
+      <AppBar  classes={{root: classes.appBar}} position="static">
         <Toolbar>
-          {/* <IconButton
+          <IconButton
             edge="start"
             className={classes.menuButton}
             color="inherit"
             aria-label="open drawer"
           >
             <MenuIcon />
-          </IconButton> */}
+          </IconButton>
           <Typography className={classes.title} variant="h6" noWrap>
-            Personajes
+              {props.resource}
           </Typography>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
