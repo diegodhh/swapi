@@ -9,21 +9,22 @@ import Collapse from '@material-ui/core/Collapse';
 
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-
+import {translateColor} from './../../../util/colorTranslator'
 import CircularIndeterminate from './../../spiner';
 
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 const schemaLoader= (schema, itemCallback,listCallback) =>{
   const printSchema = [];
+
   let index = 0;
   for (const property in schema) {
     
-    if (schema[property] !== Array) {
-      printSchema.push(itemCallback(property, index))
+    if (schema[property].type !== Array) {
+      printSchema.push(itemCallback(property, schema[property], index))
     }
-    if (schema[property] === Array) {
-      printSchema.push(listCallback(property, index))
+    if (schema[property].type === Array) {
+      printSchema.push(listCallback(property,schema[property], index))
     }
     index++ 
   }
@@ -70,10 +71,21 @@ const useStyles = makeStyles(theme => ({
       fontWeight: 800,
       color: 'white',
       flex: '1 0 0' 
+    },
+    subheader:{
+      fontWeight: '700',
+    
     }
   }));
 
 export default function NestedList({schema,item,icon, select}) {
+  if (item && item['eye_color']) {
+    item['eye_color'] = translateColor(item['eye_color']);
+  }
+  if (item && item['eye_colors']) {
+    item['eye_colors'] = translateColor(item['eye_colors']);
+  }
+  
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
 
@@ -87,17 +99,22 @@ export default function NestedList({schema,item,icon, select}) {
       component="nav"
       aria-labelledby="nested-list-subheader"
       subheader={
-        <ListSubheader component="div" id="nested-list-subheader">
-          description 
+        <ListSubheader classes={{root:classes.subheader}}component="div" id="nested-list-subheader">
+          descripción
         </ListSubheader>
       }
       className={classes.root}
     >
       {
-        schemaLoader(schema, (key, index)=>{
+        schemaLoader(schema, (key, obj, index)=>{
           if (index === 0) {
             return null
           } else {
+            if (item) {
+              if (item[key] === 'unknown') {
+                item[key] = 'desconocido'
+              }  
+            }
             return ( 
             <ListItem classes={{root: classes.featuresItem}}>
         
@@ -106,13 +123,13 @@ export default function NestedList({schema,item,icon, select}) {
          
             </ListItemIcon>
             
-            <ListItemText classes={{root: classes.featuresItemText}} primary={item?key: 'loading'} />
+            <ListItemText classes={{root: classes.featuresItemText}} primary={item?obj.displayName: 'loading'} />
             <ListItemText classes={{root: classes.featuresItemProperty}} primary={item?item[key]: 'loading'} />
          </ListItem> )
         }
           }
         ,
-        (key, index)=>{
+        (key,obj, index)=>{
                   
                   return(
                   <> 
@@ -120,10 +137,10 @@ export default function NestedList({schema,item,icon, select}) {
                     <ListItemIcon classes={{root:classes.iconParent}}>
                       <img src={icon}/>
                     </ListItemIcon>
-                    <ListItemText primary={key} />
+                    <ListItemText primary={obj.displayName} />
                     {open ? <ExpandLess /> : <ExpandMore />}
                   </ListItem>
-                  {!item? null: item[key].map((subItem, index)=>{
+                  {!item? null: item[key].map((subItem, obj, index)=>{
             if (typeof(subItem) === 'string') {
               return (<CircularIndeterminate/>)
             } 

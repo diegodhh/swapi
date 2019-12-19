@@ -10,9 +10,9 @@ import { dark } from '@material-ui/core/styles/createPalette';
 import { Hidden } from '@material-ui/core';
 import zIndex from '@material-ui/core/styles/zIndex';
 const theme = createMuiTheme({
-  body: {
-    backgroundImage: 'url("./img/stars-background.jpg")',
-    padding: '4vh',
+  'body': {
+    background: 'red',
+   
     position: 'relative',
    
     

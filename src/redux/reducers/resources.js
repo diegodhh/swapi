@@ -13,9 +13,9 @@ export default function (data = {resources:{}, current:{}, selectedResource:'Cha
       
     } 
 
-    if (['Characters', 'Movies', 'Resource'].indexOf(data.selectedResource) === -1){
-      throw {msg: 'El recurso no es una pelicula ni nada che'}
-    }
+    // if (['Characters', 'Movies', 'Resource'].indexOf(data.selectedResource) === -1){
+    //   throw {msg: 'El recurso no es una pelicula ni nada che'}
+    // }
    
     
     const resource= new Resources[data.selectedResource](data.current);

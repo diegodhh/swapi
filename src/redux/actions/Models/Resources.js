@@ -192,6 +192,40 @@ export class Movies extends Resource {
     }
     
 }
+export class Starships extends Resource {
+    constructor() {
+        super()
+        this.URL = 'https://swapi.co/api/starships/';
+        this.ResourseName = 'Starships'
+    }
+    
+}
 
+export class Vehicles extends Resource {
+    constructor() {
+        super()
+        this.URL = 'https://swapi.co/api/vehicles/';
+        this.ResourseName = 'Vehicles'
+    }
+    
+}
+
+export class Species extends Resource {
+    constructor() {
+        super()
+        this.URL = 'https://swapi.co/api/species/';
+        this.ResourseName = 'Species'
+    }
+    
+}
+
+export class Planets extends Resource {
+    constructor() {
+        super()
+        this.URL = 'https://swapi.co/api/planets/';
+        this.ResourseName = 'Planets'
+    }
+    
+}
 
 

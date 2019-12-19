@@ -195,15 +195,16 @@ export class Resource {
 export class Characters extends Resource {
     constructor(currentState) {
         super(currentState)
-        this._state.dataSchema =  {name: String,
-            height: Number,
-            mass: String,
-            eye_color: String,         
-            films: Array
+        this._state.dataSchema =  {name: {type: String, displayName: 'nombre'},
+            height:{type: Number, displayName:'altura'},
+            mass: {type:String, displayName: 'peso'},
+            eye_color: {type:String, displayName: 'color de ojos'},         
+            films: {type:Array, displayName: 'Peliculas'}
             } ;
        
       
-        this._state.resourceName = 'Characters'   
+        this._state.resourceName = 'Characters'
+        this._state.displayName = 'Personajes'   
     }
   
 
@@ -215,11 +216,70 @@ export class Characters extends Resource {
 export class Movies extends Resource {
     constructor(currentState) {
         super(currentState)
-        this._state.dataSchema = {title: String, 
-        director: String, 
-        producer: String, 
-        release_date: Date}; 
+        this._state.dataSchema = {title: {type:String, displayName: 'Titulo'}, 
+        director: {type:String, displayName: 'Director'}, 
+        producer: {type:String, displayName: 'Productor'}, 
+        release_date: {type:Date, displayName: 'Fecha de estreno'}
+    }; 
         this._state.resourceName = 'Movies'
+        this._state.displayName = 'Peliculas'
+    }
+    
+}
+
+export class Starships extends Resource {
+    constructor(currentState) {
+        super(currentState)
+        this._state.dataSchema = {name: {type:String, displayName: 'Nombre'}, 
+        manufacturer: {type:String, displayName: 'Fabricante'}, 
+        cost_in_credits: {type:Number, displayName: 'Precio'}, 
+        passengers: {type:Date, displayName: 'pasajeros'}
+    }; 
+        this._state.resourceName = 'Starships'
+        this._state.displayName = 'Naves espaciales'
+    }
+    
+}
+
+export class Planets extends Resource {
+    constructor(currentState) {
+        super(currentState)
+        this._state.dataSchema = {name: {type:String, displayName: 'Nombre'}, 
+        orbital_period: {type:Number, displayName: 'periodo de orbita'}, 
+        population: {type:Number, displayName: 'poblacion'}, 
+        gravity: {type:Number, displayName: 'gravedad'}
+    }; 
+        this._state.resourceName = 'Planets'
+        this._state.displayName = 'Planetas'
+    }
+    
+}
+
+export class Vehicles extends Resource {
+    constructor(currentState) {
+        super(currentState)
+        this._state.dataSchema = {name: {type:String, displayName: 'Nombre'}, 
+        model: {type:Number, displayName: 'Modelo'}, 
+        max_atmosphering_speed: {type:Number, displayName: 'Maxima Velocidad'}, 
+        manufacturer: {type:Number, displayName: 'fabricante'}
+    }; 
+        this._state.resourceName = 'Vehicles'
+        this._state.displayName = 'vehiculos'
+    }
+    
+}
+
+
+export class Species extends Resource {
+    constructor(currentState) {
+        super(currentState)
+        this._state.dataSchema = {name: {type:String, displayName: 'Nombre'}, 
+        eye_colors: {type:Number, displayName: 'Color de ojos'}, 
+        average_lifespan: {type:Number, displayName: 'Promedio de vida'}, 
+        language: {type:String, displayName: 'lenguaje'}
+    }; 
+        this._state.resourceName = 'Species'
+        this._state.displayName = 'Especies'
     }
     
 }

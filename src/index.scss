@@ -28,10 +28,13 @@
       }
   }
 body {
-  
+    position: relative;
     background-image: url("./img/stars-background.jpg");
     background-repeat: repeat;
-    
+    margin: 0px;
+    #root {
+      position: relative;
+    }
     & > * {
         
         //backdrop-filter: blur(1.2px) brightness(60%);; 
@@ -40,7 +43,7 @@ body {
     
     
 }
-
+* { Box-sizing: Border-box }
 
 @font-face {
     font-family: 'jediFont';
@@ -49,7 +52,7 @@ body {
     src: url('./fonts/Starjedi.ttf') format('truetype'); /* Safari, Android, iOS */
      
   }
-
+* { Box-sizing: Border-box }
 
   .color-primary-0 { color: #FEDC00 }	/* Main Primary color */
   .color-primary-1 { color: #FFDD00 }

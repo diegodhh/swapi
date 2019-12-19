@@ -17,7 +17,7 @@ import {connect} from 'react-redux';
 import * as actionCreators  from '../../redux/actions/action-creators';
 
 const mapStateToProps = state => ({ searchField: state.data.current.searchField,
-  resource: state.data.selectedResource })
+  resource: state.data.selectedResource, displayName: state.data.current.displayName })
 
   const mapDispatchToProps = dispatch => {
     return {
@@ -26,9 +26,15 @@ const mapStateToProps = state => ({ searchField: state.data.current.searchField,
   }
 const useStyles = makeStyles(theme => ({
   appBar:{
-    height: '10vh',
+   
     backgroundColor: theme.palette.background.paper,
-    borderRadius: theme.layout.borderRadius
+    borderRadius: theme.layout.borderRadius,
+    [theme.breakpoints.down('sm')]: {
+      position: 'fixed',
+      top: '0px' , 
+      left: '0px' ,
+      zIndex: 1000 ,
+      width: '100%'}
   },
   grow: {
     flexGrow: 1,
@@ -183,7 +189,9 @@ function PrimarySearchAppBar(props) {
     <div className={classes.grow}>
       <AppBar  classes={{root: classes.appBar}} position="static">
         <Toolbar>
+        <div className={classes.sectionMobile}>
           <IconButton
+            onClick={props.toggleNavBar}
             edge="start"
             className={classes.menuButton}
             color="inherit"
@@ -191,8 +199,18 @@ function PrimarySearchAppBar(props) {
           >
             <MenuIcon />
           </IconButton>
+            {/* <IconButton
+              aria-label="show more"
+              aria-controls={mobileMenuId}
+              aria-haspopup="true"
+              onClick={handleMobileMenuOpen}
+              color="inherit"
+            >
+              <MoreIcon />
+            </IconButton> */}
+          </div>
           <Typography className={classes.title} variant="h6" noWrap>
-              {props.resource}
+              {props.displayName}
           </Typography>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
@@ -207,6 +225,7 @@ function PrimarySearchAppBar(props) {
               inputProps={{ 'aria-label': 'search' }}
             />
           </div>
+          
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             {/* <IconButton aria-label="show 4 new mails" color="inherit">
@@ -230,17 +249,7 @@ function PrimarySearchAppBar(props) {
               <AccountCircle />
             </IconButton> */}
           </div>
-          <div className={classes.sectionMobile}>
-            {/* <IconButton
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton> */}
-          </div>
+         
         </Toolbar>
       </AppBar>
       {renderMobileMenu}

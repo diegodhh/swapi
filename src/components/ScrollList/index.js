@@ -13,7 +13,7 @@ import clsx from 'clsx';
 
 const mapStateToProps = state => ({ currentList: state.data.current.displayList,
   selectedItemIndex: state.data.current.selectedItemIndex,
-fetching: state.data.current.fetching,fetching: state.data.current.fetching, fetchedPages: state.data.current.fetchedPages })
+fetching: state.data.current.fetching,fetching: state.data.current.fetching, fetchedPages: state.data.current.fetchedPages, schema: state.data.current.dataSchema })
 
   const mapDispatchToProps = dispatch => {
     return {
@@ -35,14 +35,24 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.paper,
     position: 'relative',
     overflow: 'auto',
-    height: '85vh',
+    height: '100vh',
     textTransform: "uppercase",
     fontWeight: 800,
     color: ' white',
-    opacity: theme.palette.opacity
+    opacity: theme.palette.opacity,
+    [theme.breakpoints.down('sm')]: {
+      position: 'absolut',
+      top: '20px' , 
+      left: '0px' ,
+      zIndex: 500 ,
+      width: '100%',
+      height: '100%'
+    }
   },
   listSection: {
-    backgroundColor: 'inherit',
+    backgroundColor: 'inherit'
+    
+    
   },
   selectedItem: {
     backgroundColor : theme.palette.primary.dark,
@@ -50,6 +60,9 @@ const useStyles = makeStyles(theme => ({
     '&:hover': {
       background: theme.palette.primary.dark,
     }
+  },subheader:{
+    fontWeight: '700',
+  
   },
   ul: {
     backgroundColor: 'inherit',
@@ -112,17 +125,17 @@ useEffect(() => {
   
   
   const classes = useStyles();
-  const tag = props.currentList.length? Object.keys(props.currentList[0])[0] : 'Loading'; 
+  const tag = props.currentList.length? props.schema[Object.keys(props.schema)[0]].displayName : 'Loading'; 
  
   
   return (
 
 
-    <List ref={listElement} onScroll={handleScroll} className={clsx(classes.root, 'laser-scroll-bar')} subheader={<li />}>
+    <List onClick={props.toggleFeatures} ref={listElement} onScroll={handleScroll} className={clsx(classes.root, 'laser-scroll-bar')} subheader={<li />}>
       {[tag].map(sectionId => (
-        <li  key={`section-${sectionId}`} className={classes.listSection}>
+        <li  key={`section-${sectionId}`}  className={classes.listSection}>
           
-            <ListSubheader>{`${sectionId}`}</ListSubheader>
+            <ListSubheader classes={{root:  classes.subheader}} >{`${sectionId}`}</ListSubheader>
             {props.currentList.map((item, index) => {
               let ifSelected;
               if (index === props.selectedItemIndex) {
@@ -136,20 +149,30 @@ useEffect(() => {
                </ul>
               )
             })}
-             
+              {
+               props.fetching &&  <CircularIndeterminate/>
+             }
              {
-              ( <Collapse in={onBottom} collapsedHeight={0}>
+              ( 
+                <>
+              <ul key={`white space `} className={classes.ul}>
+              <ListItem style={{height:'60px'}} key={`white space `}>
+                <ListItemText  primary='' />
+              </ListItem>
+               </ul>
+              
+              
                  
                       <ul key={`white space `} className={classes.ul}>
                         <ListItem style={{height:'60px'}} key={`white space `}>
                           <ListItemText  primary='' />
                         </ListItem>
                     </ul>
-              </Collapse> )
+             
+              </>
+              )
              }
-             {
-               props.fetching &&  <CircularIndeterminate/>
-             }
+            
              
         </li>
         
