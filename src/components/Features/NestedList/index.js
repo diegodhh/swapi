@@ -1,12 +1,12 @@
 import React from 'react';
-import { makeStyles, withTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
-
+import robotIcon from './../../../img/index.png'
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import {translateColor} from './../../../util/colorTranslator'
@@ -78,7 +78,7 @@ const useStyles = makeStyles(theme => ({
     }
   }));
 
-export default function NestedList({schema,item,icon, select}) {
+export default function NestedList({schema,item, select}) {
   if (item && item['eye_color']) {
     item['eye_color'] = translateColor(item['eye_color']);
   }
@@ -121,7 +121,7 @@ export default function NestedList({schema,item,icon, select}) {
                   <ListItem classes={{root: classes.featuresItem}}>
               
                     <ListItemIcon classes={{root:classes.iconParent}}>
-                    <img src={icon}/>
+                    <img src={robotIcon}/>
               
                   </ListItemIcon>
                   
@@ -137,7 +137,7 @@ export default function NestedList({schema,item,icon, select}) {
                         <> 
                         <ListItem button onClick={handleClick}>
                           <ListItemIcon classes={{root:classes.iconParent}}>
-                            <img src={icon}/>
+                            <img src={robotIcon}/>
                           </ListItemIcon>
                           <ListItemText primary={obj.displayName} />
                           {open ? <ExpandLess /> : <ExpandMore />}
@@ -150,7 +150,7 @@ export default function NestedList({schema,item,icon, select}) {
                   <List key={subItem.name + subItem.director + index} component="div" disablePadding>
                     <ListItem onClick={()=>select(subItem.title)}button className={classes.nested}>
                       <ListItemIcon classes={{root:classes.iconParent}}>
-                        <img src={icon}/>
+                        <img src={robotIcon}/>
                         {/* <StarBorder /> */}
                       </ListItemIcon>
                       <ListItemText primary={subItem.title || subItem.msg} />

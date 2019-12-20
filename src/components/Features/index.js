@@ -1,7 +1,7 @@
 import NestedList from './NestedList'
 import CircularIndeterminate from './../spiner';
 import {makeStyles, Typography } from '@material-ui/core';
-import deathStar from './../../img/death-star.svg'
+
 import React from 'react';
 import {connect} from 'react-redux';
 import * as actionCreators  from '../../redux/actions/action-creators';
@@ -111,7 +111,7 @@ function Features(props) {
 
         </div>
         
-          <NestedList item={props.selectedItem} select={props.selectItemInsideDetail} schema={props.schema} icon={deathStar }/>
+          <NestedList item={props.selectedItem} select={props.selectItemInsideDetail} schema={props.schema}/>
           </div>
           </Collapse> 
           
