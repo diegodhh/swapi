@@ -195,6 +195,7 @@ export class Movies extends Resource {
 export class Starships extends Resource {
     constructor() {
         super()
+        this.searchApi = 'https://swapi.co/api/starships/?search='
         this.URL = 'https://swapi.co/api/starships/';
         this.ResourseName = 'Starships'
     }
@@ -204,6 +205,7 @@ export class Starships extends Resource {
 export class Vehicles extends Resource {
     constructor() {
         super()
+        this.searchApi = 'https://swapi.co/api/vehicles/?search='
         this.URL = 'https://swapi.co/api/vehicles/';
         this.ResourseName = 'Vehicles'
     }
@@ -213,6 +215,7 @@ export class Vehicles extends Resource {
 export class Species extends Resource {
     constructor() {
         super()
+        this.searchApi = 'https://swapi.co/api/species/?search='
         this.URL = 'https://swapi.co/api/species/';
         this.ResourseName = 'Species'
     }
@@ -222,6 +225,7 @@ export class Species extends Resource {
 export class Planets extends Resource {
     constructor() {
         super()
+        this.searchApi = 'https://swapi.co/api/planets/?search='
         this.URL = 'https://swapi.co/api/planets/';
         this.ResourseName = 'Planets'
     }
