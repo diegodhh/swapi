@@ -32,6 +32,8 @@ body {
     background-image: url("./img/stars-background.jpg");
     background-repeat: repeat;
     margin: 0px;
+    padding: 0;
+   
     #root {
       position: relative;
     }
@@ -43,7 +45,10 @@ body {
     
     
 }
-* { Box-sizing: Border-box }
+* { 
+  Box-sizing: Border-box;
+  
+}
 
 @font-face {
     font-family: 'jediFont';

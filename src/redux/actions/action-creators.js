@@ -15,7 +15,7 @@ const {fetch_data,fetch_more, select_resource, select_item,search_item} = action
       const {data} = getState();
       
       
-      const resource= new Resources[data.selectedResource]
+      const resource= new Resources[data.selectedResource]()
       resource.createAction({type:fetch_data}, dispatch, getState)
       
    }
@@ -30,7 +30,7 @@ const {fetch_data,fetch_more, select_resource, select_item,search_item} = action
       const {data} = getState();
       
       
-      const resource= new Resources[data.selectedResource]
+      const resource= new Resources[data.selectedResource]()
       resource.createAction({type:fetch_more}, dispatch, getState)
       
    }
@@ -93,7 +93,7 @@ const {fetch_data,fetch_more, select_resource, select_item,search_item} = action
       const {data} = getState();
       
       
-      const resource= new Resources[data.selectedResource]
+      const resource= new Resources[data.selectedResource]()
       resource.createAction({type:search_item, payload: str}, dispatch, getState)
       
    }

@@ -13,16 +13,14 @@ export default function (data = {resources:{}, current:{}, selectedResource:'Cha
       
     } 
 
-    // if (['Characters', 'Movies', 'Resource'].indexOf(data.selectedResource) === -1){
-    //   throw {msg: 'El recurso no es una pelicula ni nada che'}
-    // }
    
+/// polimorphic way of creating actions and reducers, respecting the serializable data of the store, and Immutability   
     
     const resource= new Resources[data.selectedResource](data.current);
     let currentState = resource.reducer(action);
    
   return {...data, current: currentState} 
-  //  return {...state, currentState}
+
 
 
 

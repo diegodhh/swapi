@@ -8,7 +8,7 @@ const actions = {
     populate_item: 'populate-item',
     scroll_bottom: 'scroll-bottom',
     select_resource: 'select-resource',
-    select_item: 'select-item',
+    
     show_spin: 'show-spin',
     conection_error: 'conection_error'
 }

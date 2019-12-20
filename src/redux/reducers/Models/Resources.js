@@ -1,5 +1,8 @@
 import actions from "../../actions/action-types";
-import { object } from "prop-types";
+
+
+/// polimorphic way of creating actions and reducers, respecting the serializable data of the store, and Immutability
+
 
 export class Resource {
     constructor(currentState={}) {
@@ -93,7 +96,7 @@ export class Resource {
     
     _getCompleteList = () =>{
         let completeList = this._state.fetchedData.results;
-        const pages = this._state.fetchedPages.forEach((item)=>{
+         this._state.fetchedPages.forEach((item)=>{
             completeList = completeList.concat(item.results);
         })
         

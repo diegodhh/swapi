@@ -15,7 +15,7 @@ color.set('green, yellow', 'verdes amarillentos')
 color.set('dark', 'oscuros')
 color.set('unknown', 'desconocidos')
 color.set('golden', 'dorados')
-
+/// traductor provisiorio por si no llego a tiempo  a hacerlo en el backend
 
 
 

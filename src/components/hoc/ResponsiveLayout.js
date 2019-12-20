@@ -1,10 +1,10 @@
-import React ,{useState, useCallback}from 'react'
+import React ,{useState}from 'react'
 import PropTypes from 'prop-types'
 import Slide from '@material-ui/core/Slide';
 import { Grid} from '@material-ui/core';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { selectResource } from '../../redux/actions/action-creators';
+
 
 
 const useStyles = makeStyles(theme => ({
@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
 
 
 
-function ResponsiveLayout({Nav, Search, Scroll,Card}) {
+function ResponsiveLayout({Nav, Header, Scroll,Features}) {
     
   const classes= useStyles()
   const theme = useTheme();
@@ -28,7 +28,7 @@ function ResponsiveLayout({Nav, Search, Scroll,Card}) {
         <Grid item xs={2}>
               
                   <div style={{position: 'relative'}}>
-                  <Nav />
+                  <Nav isPhone={!isDesktop} />
                   </div>
              
         </Grid> 
@@ -37,12 +37,12 @@ function ResponsiveLayout({Nav, Search, Scroll,Card}) {
         <Grid item xs={6}>
               <Grid item xs={12}>
                       <div style={{position: 'relative'}}>
-                      <Search  toggleNavBar={toggleNavBar}/>
+                      <Header isPhone={!isDesktop}  toggleNavBar={toggleNavBar}/>
                       </div>
               </Grid>
               <Grid item xs={12}>
                       <div style={{position: 'relative'}}>
-                      <Scroll/>
+                      <Scroll isPhone={!isDesktop}/>
                       </div>
               </Grid>
               
@@ -51,7 +51,7 @@ function ResponsiveLayout({Nav, Search, Scroll,Card}) {
         
         <Grid item xs={4}>  
           <div style={{position: 'relative', height: '100%', width:'100%'} }>
-            <Card/>
+            <Features isPhone={!isDesktop}/>
           </div>
         
         </Grid>  
@@ -66,16 +66,16 @@ function ResponsiveLayout({Nav, Search, Scroll,Card}) {
     if (isPhone) {
       return ( 
       <>
-      <Search toggleNavBar={toggleNavBar}/>
-      <Scroll toggleFeatures={toggleFeatures}/>
+      <Header  isPhone={isPhone} toggleNavBar={toggleNavBar}/>
+      <Scroll  isPhone={isPhone}  toggleFeatures={toggleFeatures}/>
       <Slide direction="right" in={navBarState} timeout={100}>
-                <div>
-                  <Nav toggleNavBar={toggleNavBar}/>
+                <div >
+                  <Nav  isPhone={isPhone}  toggleNavBar={toggleNavBar}/>
                 </div>
       </Slide> 
       <Slide direction="left" in={featuresState}>
                 <div>
-                  <Card toggleFeatures={toggleFeatures}/>
+                  <Features  isPhone={isPhone}  toggleFeatures={toggleFeatures}/>
                 </div>
       </Slide>      
             
@@ -109,7 +109,7 @@ function ResponsiveLayout({Nav, Search, Scroll,Card}) {
     
   }
   const [navBarState, setNavBarState] = useState(false)
-  const toggleNavBar=useCallback(()=>{
+  const toggleNavBar=()=>{
     if (featuresState) {
       return toggleFeatures()
     }
@@ -119,9 +119,9 @@ function ResponsiveLayout({Nav, Search, Scroll,Card}) {
       })
     }
    
-  })
+  }
   const [featuresState, setfeaturesState] = useState(false)
-  const toggleFeatures=useCallback(()=>{
+  const toggleFeatures=()=>{
     if (navBarState) {
       return toggleNavBar()
     }
@@ -131,11 +131,11 @@ function ResponsiveLayout({Nav, Search, Scroll,Card}) {
       })
     }
    
-  })
+  }
 
   return (
         <>
-    <div className={classes.root}>
+    <div style={{position: 'relative'}} className={classes.root}>
        {desktopLayout(matches)} 
        {mobileLayout(!matches)}    
     </div>
@@ -146,9 +146,9 @@ function ResponsiveLayout({Nav, Search, Scroll,Card}) {
 
 ResponsiveLayout.propTypes = {
   Nav: PropTypes.element,
-  Search: PropTypes.element,
+  Header: PropTypes.element,
   Scroll: PropTypes.element,
-  Card: PropTypes.element
+  Features: PropTypes.element
 
 }
 

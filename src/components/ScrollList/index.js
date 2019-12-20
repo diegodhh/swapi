@@ -1,4 +1,4 @@
-import React, {useCallback,useState, useRef,useEffect} from 'react';
+import React, {useCallback,useRef,useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -7,8 +7,8 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import {connect} from 'react-redux'
 import * as actionCreators  from '../../redux/actions/action-creators';
 import CircularIndeterminate from './../spiner';
-import Collapse from '@material-ui/core/Collapse';
 import clsx from 'clsx';
+
 
 
 const mapStateToProps = state => ({ currentList: state.data.current.displayList,
@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
     marginBottom: '10px',
     width: '100%',
     maxWidth: '100%',
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: theme.palette.background.default,
     position: 'relative',
     overflow: 'auto',
     height: '100vh',
@@ -48,6 +48,8 @@ const useStyles = makeStyles(theme => ({
       width: '100%',
       height: '100%'
     }
+    
+
   },
   listSection: {
     backgroundColor: 'inherit'
@@ -99,27 +101,20 @@ useEffect(() => {
 }, [props])
   
   
-  const [onBottom, setBottom] = useState(false)
+
  
   
  
   const handleScroll = useCallback((e) =>{
     
     const bottom = e.target.scrollHeight - e.target.scrollTop <= 20 + e.target.clientHeight;
-    
-    
-    if (e.target.scrollHeight - e.target.scrollTop -20>= e.target.clientHeight) {
-      setBottom(false)
-    }
-   
-      
+       
     if (bottom && !props.fetching) { 
       
-        setBottom(true)
+       
         props.fetchMore()
        }
-      
-    
+        
   })
    
   

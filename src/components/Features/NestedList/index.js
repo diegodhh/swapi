@@ -12,8 +12,8 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import {translateColor} from './../../../util/colorTranslator'
 import CircularIndeterminate from './../../spiner';
 
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 
+// this function create layout acording the type of the schema, array or string... 
 const schemaLoader= (schema, itemCallback,listCallback) =>{
   const printSchema = [];
 
@@ -105,63 +105,65 @@ export default function NestedList({schema,item,icon, select}) {
       }
       className={classes.root}
     >
+      {/* this function is maping the layout acording the schema */}
       {
-        schemaLoader(schema, (key, obj, index)=>{
-          if (index === 0) {
-            return null
-          } else {
-            if (item) {
-              if (item[key] === 'unknown') {
-                item[key] = 'desconocido'
-              }  
-            }
-            return ( 
-            <ListItem classes={{root: classes.featuresItem}}>
-        
-              <ListItemIcon classes={{root:classes.iconParent}}>
-              <img src={icon}/>
-         
-            </ListItemIcon>
-            
-            <ListItemText classes={{root: classes.featuresItemText}} primary={item?obj.displayName: 'loading'} />
-            <ListItemText classes={{root: classes.featuresItemProperty}} primary={item?item[key]: 'loading'} />
-         </ListItem> )
-        }
-          }
-        ,
-        (key,obj, index)=>{
-                  
-                  return(
-                  <> 
-                  <ListItem button onClick={handleClick}>
+        schemaLoader(schema, 
+              (key, obj, index)=>{
+                if (index === 0) {
+                  return null
+                } else {
+                  if (item) {
+                    if (item[key] === 'unknown') {
+                      item[key] = 'desconocido'
+                    }  
+                  }
+                  return ( 
+                  <ListItem classes={{root: classes.featuresItem}}>
+              
                     <ListItemIcon classes={{root:classes.iconParent}}>
-                      <img src={icon}/>
-                    </ListItemIcon>
-                    <ListItemText primary={obj.displayName} />
-                    {open ? <ExpandLess /> : <ExpandMore />}
-                  </ListItem>
-                  {!item? null: item[key].map((subItem, obj, index)=>{
-            if (typeof(subItem) === 'string') {
-              return (<CircularIndeterminate/>)
-            } 
-            return (<> <Collapse in={open} timeout="auto" unmountOnExit>
-            <List key={subItem.name + subItem.director + index} component="div" disablePadding>
-              <ListItem onClick={()=>select(subItem.title)}button className={classes.nested}>
-                <ListItemIcon classes={{root:classes.iconParent}}>
-                  <img src={icon}/>
-                  {/* <StarBorder /> */}
-                </ListItemIcon>
-                <ListItemText primary={subItem.title || subItem.msg} />
-              </ListItem>
-            </List>
-          </Collapse>
-          </>) 
-            
-          })
-         
-        }
-                </>)
-        })
+                    <img src={icon}/>
+              
+                  </ListItemIcon>
+                  
+                  <ListItemText classes={{root: classes.featuresItemText}} primary={item?obj.displayName: 'loading'} />
+                  <ListItemText classes={{root: classes.featuresItemProperty}} primary={item?item[key]: 'loading'} />
+              </ListItem> )
+              }
+                }
+        ,
+              (key,obj, index)=>{
+                        
+                        return(
+                        <> 
+                        <ListItem button onClick={handleClick}>
+                          <ListItemIcon classes={{root:classes.iconParent}}>
+                            <img src={icon}/>
+                          </ListItemIcon>
+                          <ListItemText primary={obj.displayName} />
+                          {open ? <ExpandLess /> : <ExpandMore />}
+                        </ListItem>
+                        {!item? null: item[key].map((subItem, obj, index)=>{
+                  if (typeof(subItem) === 'string') {
+                    return (<CircularIndeterminate/>)
+                  } 
+                  return (<> <Collapse in={open} timeout="auto" unmountOnExit>
+                  <List key={subItem.name + subItem.director + index} component="div" disablePadding>
+                    <ListItem onClick={()=>select(subItem.title)}button className={classes.nested}>
+                      <ListItemIcon classes={{root:classes.iconParent}}>
+                        <img src={icon}/>
+                        {/* <StarBorder /> */}
+                      </ListItemIcon>
+                      <ListItemText primary={subItem.title || subItem.msg} />
+                    </ListItem>
+                  </List>
+                </Collapse>
+                </>) 
+                  
+                })
+              
+              }
+                      </>)
+              })
      
       }
       
