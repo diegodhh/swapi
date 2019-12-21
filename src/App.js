@@ -6,6 +6,15 @@ import Nav from './components/NavList';
 import Features from './components/Features';
 import { createMuiTheme,ThemeProvider} from '@material-ui/core/styles';
 import {Helmet} from "react-helmet";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect,
+  useHistory,
+  useLocation
+} from "react-router-dom";
 
 const theme = createMuiTheme({
   'body': {
@@ -59,12 +68,16 @@ function App() {
                 <link rel="canonical" href="http://mysite.com/example" />
   </Helmet> 
     <ThemeProvider theme={theme}>
+    <Router>
+        <Route path='/'>
         <ResponsiveLayout 
             Nav={Nav} 
             Header={SearchHeader} 
             Scroll={ScrollList} 
             Features={Features}/>
-      
+      </Route>
+    </Router>
+    
     </ThemeProvider>
     </> 
     )

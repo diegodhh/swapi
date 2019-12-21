@@ -160,11 +160,11 @@ export class Resource {
             
             this._state.displayList = action.payload.list 
             
-
+            
         }
         
      
-      
+        
         
        
         

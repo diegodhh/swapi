@@ -4,7 +4,10 @@ import Slide from '@material-ui/core/Slide';
 import { Grid} from '@material-ui/core';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-
+import {
+  Route,
+  useHistory
+} from "react-router-dom";
 
 
 const useStyles = makeStyles(theme => ({
@@ -18,7 +21,10 @@ const useStyles = makeStyles(theme => ({
 
 
 function ResponsiveLayout({Nav, Header, Scroll,Features}) {
-    
+   
+
+  let history= useHistory()
+
   const classes= useStyles()
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('md'));
@@ -66,6 +72,8 @@ function ResponsiveLayout({Nav, Header, Scroll,Features}) {
     if (isPhone) {
       return ( 
       <>
+        
+
       <Header  isPhone={isPhone} toggleNavBar={toggleNavBar}/>
       <Scroll  isPhone={isPhone}  toggleFeatures={toggleFeatures}/>
       <Slide direction="right" in={navBarState} timeout={100}>
@@ -78,7 +86,7 @@ function ResponsiveLayout({Nav, Header, Scroll,Features}) {
                   <Features  isPhone={isPhone}  toggleFeatures={toggleFeatures}/>
                 </div>
       </Slide>      
-            
+        
        </>     
               
       
@@ -109,32 +117,58 @@ function ResponsiveLayout({Nav, Header, Scroll,Features}) {
     
   }
   const [navBarState, setNavBarState] = useState(false)
+  
+  
   const toggleNavBar=()=>{
     if (featuresState) {
       return toggleFeatures()
     }
     if (!matches) {
-      setNavBarState((navBarState)=>{
-        return !navBarState
-      })
+      if (!navBarState) {
+        history.push('/menu')
+       } else {
+          history.push('/list') 
+        }
     }
    
   }
+  history.listen((location)=>{
+    if (location.pathname === '/list') {
+      setNavBarState(false)
+      setfeaturesState(false)
+    }
+    if (location.pathname === '/menu') {
+      setNavBarState(true)
+    }
+   
+    if (location.pathname === '/features') {
+      setfeaturesState(true)
+    }
+  })
+ 
   const [featuresState, setfeaturesState] = useState(false)
   const toggleFeatures=()=>{
     if (navBarState) {
       return toggleNavBar()
     }
-    if (!matches) {
-      setfeaturesState((featuresState)=>{
-        return !featuresState
-      })
-    }
+    if (!featuresState) {
+      history.push('/features')
+     } else {
+        history.push('/list') 
+      }
+    // if (!matches) {
+    //   setfeaturesState((featuresState)=>{
+        
+
+    //     return !featuresState
+    //   })
+    // }
    
   }
 
   return (
         <>
+        
     <div style={{position: 'relative'}} className={classes.root}>
        {desktopLayout(matches)} 
        {mobileLayout(!matches)}    

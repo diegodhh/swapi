@@ -94,6 +94,11 @@ const useStyles = makeStyles(theme => ({
       display: 'flex',
       alignSelf: 'center'
       
+  },
+  flexCenter: {
+    display: 'flex',
+    justifyContent: 'center',
+    
   }
 }));
 
@@ -123,7 +128,7 @@ function Nav(props) {
   return (
     <nav onClick={props.toggleNavBar}  className={classes.root}>
       
-      <List  classes={{root: classes.flexCenter}} component="nav" aria-label="secondary mailbox folders">
+      <List   component="nav" aria-label="secondary mailbox folders">
       {resourcesArray.map((Resource, key)=>{
                   let selected;
                   const resource = new Resource();
@@ -138,6 +143,7 @@ function Nav(props) {
        
      
       </List>
+      <div className={classes.flexCenter}>
       <IconButton
             onClick={toggleMoreResources}
             edge="start"
@@ -146,7 +152,9 @@ function Nav(props) {
             aria-label="open drawer"
           >
             { moreResourcesState &&
+            
               <ExpandLessIcon />
+             
             }
             { 
              !moreResourcesState &&
@@ -154,6 +162,7 @@ function Nav(props) {
             }
             
       </IconButton>
+      </div>
     </nav>
   );
 }

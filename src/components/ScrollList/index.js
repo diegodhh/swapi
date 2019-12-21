@@ -13,7 +13,7 @@ import clsx from 'clsx';
 
 const mapStateToProps = state => ({ currentList: state.data.current.displayList,
   selectedItemIndex: state.data.current.selectedItemIndex,
-fetching: state.data.current.fetching,fetching: state.data.current.fetching, fetchedPages: state.data.current.fetchedPages, schema: state.data.current.dataSchema })
+fetching: state.data.current.fetching,fetching: state.data.current.fetching, fetchedPages: state.data.current.fetchedPages,fetchedData: state.data.current.fetchedData, schema: state.data.current.dataSchema })
 
   const mapDispatchToProps = dispatch => {
     return {
@@ -118,10 +118,20 @@ useEffect(() => {
   })
    
   
-  
+  let tag;
   const classes = useStyles();
-  const tag = props.currentList.length? props.schema[Object.keys(props.schema)[0]].displayName : 'Loading'; 
- 
+  if (!props.currentList.length) {
+   
+    if (props.fetchedData || !props.fetching) {
+      tag = 'no se encontraron elementos'
+    } else {
+      tag = 'Loading'
+    }
+   
+  } else {
+    tag = props.schema[Object.keys(props.schema)[0]].displayName  
+  }
+  
   
   return (
 
