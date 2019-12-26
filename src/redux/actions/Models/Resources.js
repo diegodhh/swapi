@@ -4,7 +4,8 @@ import axios from 'axios';
 
 
 
-export class Resource {
+
+export class Resource { 
     constructor(currentState={}) {
         
         this.actions = actions;
@@ -12,15 +13,19 @@ export class Resource {
         
 
     }
-    createAction =  (action,dispatch,getstate) => {     
-
+    createAction =  (action,dispatch,getstate,next) => {     
+        const dispatchWithFirm = this.dispatchWarper(dispatch)
                 if (this[action.type]) {
                 
-                     this[action.type](action,dispatch,getstate)
+                     return this[action.type](action,dispatchWithFirm,getstate,next)
                       
+                } else {
+                    return next
                 }
                              
-    }   
+    }
+  
+      
   
     [actions.fetch_data] = async (action, dispatch,getstate) => {
         //this[actions.show_spin](dispatch)
@@ -41,13 +46,15 @@ export class Resource {
                  'Content-Type': 'application/json'
                }})
                dispatch({   
-                type: action.type,
+                type: actions.fetch_data,
                 payload: response.data 
               })
-              dispatch({   
-                type: actions.select_item 
-              })
+              this[actions.select_item]({   
+                type: actions.select_item, payload: 0 
+              },dispatch,getstate)
         } catch(err) {
+            alert('este es el error')
+            console.log(err)
             this[actions.conection_error](dispatch, err)
         }
        
@@ -56,6 +63,46 @@ export class Resource {
         
 
     }
+    [actions.populate_resource] = async (action, dispatch,getstate) => {
+        //this[actions.show_spin](dispatch)
+        try {
+            const {data} = getstate()
+            if (data.resources[this.ResourseName]) {
+                if (data.resources[this.ResourseName].fetchedData !== null) {
+                    return;
+                }
+            }
+            if (data.current.fetching) {
+                return;
+            }
+            
+            
+            
+            this[actions.show_spin](dispatch)
+            let response = await axios.get(this.URL,
+                {
+                  headers: {
+                 'Content-Type': 'application/json'
+               }})
+               dispatch({   
+                type: actions.populate_resource,
+                payload: response.data 
+              })
+              this[actions.select_item]({   
+                type: actions.select_item, payload: 0 
+              },dispatch,getstate)
+        } catch(err) {
+            alert('este es el error')
+            console.log(err)
+            this[actions.conection_error](dispatch, err)
+        }
+       
+           
+       
+        
+
+    }
+    
     [actions.show_spin] = (dispatch) => {
            
          dispatch({   
@@ -69,7 +116,7 @@ export class Resource {
            
         dispatch({   
             type: this.actions.conection_error,
-            payload: err.data 
+            payload: JSON.stringify(err) 
           })
        
 
@@ -116,16 +163,121 @@ export class Resource {
        
         
 
-    }  
-   
+    }
+    
+    [actions.select_resource] = async (action, dispatch,getstate) => {
+       
+        const {data} = getstate();
+        const resource = action.payload
+        if (data.current.fetching) {
+           return 
+        }
+           dispatch(action, true)
+         
+         
+           
+       
+        
+
+    }
+    [actions.select_item] = (action, dispatch,getstate) => {
+       
+       dispatch(action, true);
+           
+       
+        
+
+    }
+    [actions.select_item_inside_detail] = (action, dispatch,getstate) => {
+       
+        dispatch(action);
+            
+        
+         
+ 
+     }
+     [actions.select_item_by_index] = (action, dispatch,getstate) => {
+       
+        dispatch(action);
+            
+        
+         
+ 
+     }
+    
+     [actions.populate_item] = async (action, dispatch,getstate,next) => {
+        const {payload} = action
+        const {item, index,keysToPopulate} = payload;
+        try {
+            let keys;
+             await keysToPopulate.map(async (keyToPopulate)=>{
+                keys = item[keyToPopulate].map(async (itemURL)=>{
+                   try {
+                    if (typeof(itemURL) === 'object' || itemURL.indexOf('https') === -1){
+                        const err =new Error ({msg: 'alrredy fetched'});
+                        err.next = true;
+                        throw err 
+                    }
+                    let response = await axios.get(itemURL,
+                        {
+                          headers: {
+                         'Content-Type': 'application/json'
+                       }})
+                    return response.data   
+                  
+                    } catch(err) {
+                        console.log('errorr')
+                    }
+                   
+               
+                    
+                
+              
+            })
+            
+            item[keyToPopulate]=await Promise.all(keys)
+            return item[keyToPopulate];
+            })
+           
+          await Promise.all(keys)  
+         dispatch({
+            type: actions.populate_item, payload: {index, item}
+        }) 
+
+
+         } catch(err) {
+             if (err.next) {
+                 next(action);
+                 return
+             } else {
+                 console.log(err)
+                 dispatch({type:actions.conection_error, payload: JSON.stringify(err)})
+    
+             }
+            
+         }
+         
+        
+         
+        
+         
+    
+     }      
+        
+         
+ 
+     
+    
+
+
     _searchOffLine = async (action, dispatch,getstate) =>{
         dispatch({   
             type: action.type,
             payload: action.payload
           })
-          dispatch({   
-            type: this.actions.select_item   
-        })
+          this[actions.select_item]({   
+            type: actions.select_item 
+          },dispatch,getstate)
     }
     _searchOnline = async (action, dispatch,getstate) =>{
         try {
@@ -154,17 +306,32 @@ export class Resource {
                     list: response.data.results
                 }  
               })
-              dispatch({   
-                type: this.actions.select_item   
-            })
+              this[actions.select_item]({   
+                type: actions.select_item 
+              },dispatch,getstate)
             
         } catch(err) {
             this[actions.conection_error](dispatch, err)
         }
      }
+//add a firm to the action//
+    dispatchWarper = (dispatch) =>{
+        
+     
+            return (action, noSignature)=>{
+                if (noSignature) {
+                    dispatch({type: action.type+`[${actions.global_signature}]`, payload: action.payload})
+                    
+                } else {
+                    dispatch({type: action.type+`[${this.ResourseName}]`, payload: action.payload})
+                }
+                
+            }
+      
+    } 
     
    
-    
+  
 
 
    
@@ -172,23 +339,27 @@ export class Resource {
 
 export class Characters extends Resource {
     constructor(currentState) {
-        super()
-    
+        super(currentState)
+          
         this.searchApi = 'https://swapi.co/api/people/?search='
         this.URL = 'https://swapi.co/api/people';
-        this.ResourseName = 'Characters'   
+        this.ResourseName = 'Characters' 
+  
     }
     
+
+  
       
     
 }
 
  
 export class Movies extends Resource {
-    constructor() {
-        super()
+    constructor(currentState) {
+        super(currentState)
         this.URL = 'https://swapi.co/api/films';
-        this.ResourseName = 'Movies'
+        this.ResourseName = 'Movies';
+     
     }
     
 }
@@ -197,7 +368,8 @@ export class Starships extends Resource {
         super()
         this.searchApi = 'https://swapi.co/api/starships/?search='
         this.URL = 'https://swapi.co/api/starships/';
-        this.ResourseName = 'Starships'
+        this.ResourseName = 'Starships';
+   
     }
     
 }
@@ -207,7 +379,8 @@ export class Vehicles extends Resource {
         super()
         this.searchApi = 'https://swapi.co/api/vehicles/?search='
         this.URL = 'https://swapi.co/api/vehicles/';
-        this.ResourseName = 'Vehicles'
+        this.ResourseName = 'Vehicles';
+        
     }
     
 }

@@ -40,24 +40,15 @@ const {fetch_data,fetch_more, select_resource, select_item,search_item} = action
 
 
 
-  export const selectResource = (resource) => {
+  export const selectResource = (resourceStr) => {
       
   
  dispatch((dispatch, getState) => {
    const {data} = getState();
-   if (data.current.fetching) {
-      return 
-   }
-      dispatch({type: select_resource,
-            payload: resource
-    })
-    
-      if (!data.resources[resource]) {
-        fetchData()
-      }
+   const resource= new Resources[data.selectedResource]()
+   resource.createAction({type:select_resource, payload: resourceStr}, dispatch, getState)
       
-      
-      
+ 
    }
   )
    
@@ -66,19 +57,35 @@ const {fetch_data,fetch_more, select_resource, select_item,search_item} = action
   
   export const selectItem = (index) => {
    
+   dispatch((dispatch, getState) => {
+      const {data} = getState();
+      const resource= new Resources[data.selectedResource]()
+      resource.createAction({type:select_item,  payload: index}, dispatch, getState)
+         
+         
+      })
+     
+      
+     
    
-      dispatch ({type:select_item,
-      payload: index})
+     
       
    
    
    
   }
-  export const selectItemInsideDetail = (value) => {
+  export const selectItemInsideDetail = (obj) => {
    
+
+   dispatch((dispatch, getState) => {
+      const {data} = getState();
+      const resource= new Resources[data.selectedResource]()
+      resource.createAction({type:actions.select_item_inside_detail,  payload: obj}, dispatch, getState)
+         
+         
+      })
   
-   dispatch ({type:actions.select_item_inside_detail,
-   payload: value})
+  
    
 
 

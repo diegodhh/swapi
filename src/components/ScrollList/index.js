@@ -118,8 +118,9 @@ useEffect(() => {
   })
    
   
-  let tag;
+ 
   const classes = useStyles();
+  let tag;
   if (!props.currentList.length) {
    
     if (props.fetchedData || !props.fetching) {
@@ -128,8 +129,9 @@ useEffect(() => {
       tag = 'Loading'
     }
    
+    
   } else {
-    tag = props.schema[Object.keys(props.schema)[0]].displayName  
+    tag = props.schema[Object.keys(props.schema)[0]].displayName;
   }
   
   

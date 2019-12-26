@@ -8,9 +8,11 @@ const actions = {
     populate_item: 'populate-item',
     scroll_bottom: 'scroll-bottom',
     select_resource: 'select-resource',
-    
+    populate_resource: 'populate-resource',
+    change_screen_and_search:'change-screen-and-search',
     show_spin: 'show-spin',
-    conection_error: 'conection_error'
+    conection_error: 'conection_error',
+    global_signature: "GLOBAL"
 }
 
 export default actions;

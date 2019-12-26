@@ -132,7 +132,7 @@ export default function NestedList({schema,item, select}) {
                 }
         ,
               (key,obj, index)=>{
-                        
+                        const firstKey = item[key]?Object.keys(item[key][0])[0]:null
                         return(
                         <> 
                         <ListItem button onClick={handleClick}>
@@ -142,18 +142,18 @@ export default function NestedList({schema,item, select}) {
                           <ListItemText primary={obj.displayName} />
                           {open ? <ExpandLess /> : <ExpandMore />}
                         </ListItem>
-                        {!item? null: item[key].map((subItem, obj, index)=>{
+                        {!item? null: item[key].map((subItem, index)=>{
                   if (typeof(subItem) === 'string') {
                     return (<CircularIndeterminate/>)
                   } 
                   return (<> <Collapse in={open} timeout="auto" unmountOnExit>
-                  <List key={subItem.name + subItem.director + index} component="div" disablePadding>
-                    <ListItem onClick={()=>select(subItem.title)}button className={classes.nested}>
+                  <List key={subItem[firstKey]  + index} component="div" disablePadding>
+                    <ListItem onClick={()=>select({str: subItem[firstKey], resource: obj.resource})}button className={classes.nested}>
                       <ListItemIcon classes={{root:classes.iconParent}}>
                         <img src={robotIcon}/>
                         {/* <StarBorder /> */}
                       </ListItemIcon>
-                      <ListItemText primary={subItem.title || subItem.msg} />
+                      <ListItemText primary={subItem[firstKey] ||subItem.msg} />
                     </ListItem>
                   </List>
                 </Collapse>

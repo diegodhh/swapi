@@ -1,98 +1,78 @@
-import actions from './../actions/action-types';
-import * as Resources from './../reducers/Models/Resources'
-import axios from 'axios';
-import {fetchData} from './../actions/action-creators'
+import actions from '../actions/action-types';
+import * as ActionResources from '../actions/Models/Resources'
+import * as ReducerResources from '../reducers/Models/Resources'
+
+
 
 export const populateItem =({dispatch, getState}) => next => action => {
- 
-    
-    if (action.type === actions.select_item) {
+    if (action.type === actions.select_item+`[${actions.global_signature}]`) {
         
+        const {data} = getState(); 
+        const resourceReducer= new ReducerResources[data.selectedResource](data.current);
+        const currentState = resourceReducer.reducer({...action, type:  actions.select_item});
+        const keysToPopulate = resourceReducer.getKeysToPopulate()
+
        
+        const item = currentState.selectedItem;
         
-        
-        (async () => {
-            const {data} = getState(); 
-        const itemIndex = action.payload || data.current.selectedItemIndex;
-        const item = data.current.displayList[itemIndex]
         if (!item) {
             next(action)
             return
         }
-        dispatch({
-            type: actions.select_item_by_index, payload: action.payload
-        })    
-        if (data.selectedResource === 'Characters') { 
-                // has to populate the movie array
-                
-                try {
-                   const films = await item['films'].map(async (item, index)=>{
-                        if (item.indexOf('https') === -1){
-                            const err =new Error ({msg: 'alrredy fetched'});
-                            err.next = true;
-                            throw err 
-                        }
-                        let response = await axios.get(item,
-                            {
-                              headers: {
-                             'Content-Type': 'application/json'
-                           }})
-                         
-                        return response.data   
-                       
-                   
-                        
-                    
-                  
-                })
-                item['films']=await Promise.all(films)
+        const itemIndex = currentState.selectedItemIndex;
 
-                } catch(err) {
-                    if (err.next) {
-                        next(action);
-                        return
-                    } else {
-                        dispatch({type:actions.conection_error, payload: err.msg})
-
-                    }
-                   
+        const resourceAction= new ActionResources[data.selectedResource]()
+        resourceAction.createAction({type: actions.select_item_by_index, payload: itemIndex}, dispatch, getState)
+        const awaitNext = resourceAction.createAction({type: actions.populate_item, payload: {index: itemIndex, item, keysToPopulate}}, dispatch, getState, next)
+        
+        Promise.resolve(awaitNext).then((next)=>{
+                if (next) {
+                    next(action);
                 }
-                
-               
-                
-               
-                dispatch({
-                    type: actions.populate_item, payload: {index: itemIndex, item, resourceName: data.current.resourceName}
-                }) 
+         })
+ 
+        
+} else {
+    next(action)
+}
+}
 
-            }
-            
-    
-           
-        })()
+export const populateResource =({dispatch, getState}) => next => action => {
+    if (action.type === actions.select_resource+`[${actions.global_signature}]`) {
       
-    
-  } else {
-    next(action) 
-  }
-
+        const resourceAction= new ActionResources[action.payload]() 
+        resourceAction.createAction({type: actions.populate_resource},dispatch, getState)
+        next(action)
+} else {
+    next(action)
+}
 }
 export const changeScreenAndSearch =({dispatch, getState}) => next => action => {
-    if (action.type === actions.select_item_inside_detail) {
+    if (!action.type) {
+        next(action)
+        return
+    }
+    if (action.type.toString().indexOf(actions.select_item_inside_detail.toString()) !== -1) {
         const {data} = getState();
+    
       
-        if (data.selectedResource === 'Characters') {
-            const payloadClone = action.payload; 
-            const searchStr = payloadClone;
-            dispatch({type: actions.select_resource, payload: 'Movies'})
-            if (!data.resources['Movies']) {
-            
-                fetchData()
-            }
+       const {Resource} = ReducerResources;
+        const {actionType, signature} = Resource.separeteSignatureFromAction(action.type);
+      
+        const actionResource = new ActionResources[signature]()
+        
+        actionResource.createAction({type: actions.select_resource, payload: action.payload.resource}, dispatch,getState,next);
+
+
+      
+         
+            const searchStr = action.payload.str;
+          
             waitForMoviesScreen()
             let problem = false;
+            const newScreenResource = new ActionResources[action.payload.resource]()
             setTimeout(function(){ problem = true }, 5000);
-            
+                        
                         function waitForMoviesScreen() {
                         
                         
@@ -103,9 +83,10 @@ export const changeScreenAndSearch =({dispatch, getState}) => next => action => 
                                 return;
                                 
                             }
-                            if (data.current.fetchedData && data.selectedResource === 'Movies') {
-                                dispatch({type: actions.search_item, payload: searchStr})
-                                dispatch ({type:actions.select_item})
+                            if (data.current.fetchedData && data.selectedResource === action.payload.resource) {
+                                newScreenResource.createAction({type: actions.search_item, payload: searchStr},dispatch, getState)
+                               
+                              
                                 
                             } else {
                                 
@@ -113,18 +94,21 @@ export const changeScreenAndSearch =({dispatch, getState}) => next => action => 
                                 waitForMoviesScreen()
                             }
                     }, 50)
-            next(action)         
+            
+            
+            
+                         
 
-        } 
+    
 
-          next(action)
+      
 
 
 
         }
         
          
-
+        next(action)
     } else {
         next(action)
     }
@@ -133,7 +117,7 @@ export const changeScreenAndSearch =({dispatch, getState}) => next => action => 
 
 }
 
-
+export const myMiddlewares = [populateItem,populateResource,changeScreenAndSearch];
 
 
 //generic way for all apis
