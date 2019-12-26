@@ -24,7 +24,12 @@ const schemaLoader= (schema, itemCallback,listCallback) =>{
       printSchema.push(itemCallback(property, schema[property], index))
     }
     if (schema[property].type === Array) {
-      printSchema.push(listCallback(property,schema[property], index))
+      let aux =listCallback(property,schema[property], index);
+      if (!aux) {
+        printSchema.push((<CircularIndeterminate/>))
+        break;
+      }
+      printSchema.push(aux)
     }
     index++ 
   }
@@ -132,7 +137,10 @@ export default function NestedList({schema,item, select}) {
                 }
         ,
               (key,obj, index)=>{
-                        const firstKey = item[key]?Object.keys(item[key][0])[0]:null
+                        const firstKey = item[key] && item[key][0]?Object.keys(item[key][0])[0]:null
+                        if (!firstKey || typeof(item[key][0]) === 'string' ) {
+                          return false
+                        }
                         return(
                         <> 
                         <ListItem button onClick={handleClick}>
@@ -143,8 +151,8 @@ export default function NestedList({schema,item, select}) {
                           {open ? <ExpandLess /> : <ExpandMore />}
                         </ListItem>
                         {!item? null: item[key].map((subItem, index)=>{
-                  if (typeof(subItem) === 'string') {
-                    return (<CircularIndeterminate/>)
+                  if (typeof(subItem) === 'string' || !firstKey) {
+                    return false
                   } 
                   return (<> <Collapse in={open} timeout="auto" unmountOnExit>
                   <List key={subItem[firstKey]  + index} component="div" disablePadding>
