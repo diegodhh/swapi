@@ -41,8 +41,8 @@ const useStyles = makeStyles(theme => ({
     color: ' white',
     opacity: theme.palette.opacity,
     [theme.breakpoints.down('sm')]: {
-      position: 'absolut',
-      top: '20px' , 
+      position: 'absolute',
+      top: '53px' , 
       left: '0px' ,
       zIndex: 500 ,
       width: '100%',

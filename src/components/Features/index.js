@@ -86,7 +86,13 @@ const useStyles = makeStyles(theme => ({
 
 function Features(props) {
   const classes= useStyles()  
- 
+  if (props.isPhone && props.fetching) {
+   
+    return ( <main  className={classes.root}>
+    <CircularIndeterminate/>
+    </main>)
+   
+    }
   return (
         <>
        
