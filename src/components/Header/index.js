@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
+import CloseIcon from '@material-ui/icons/Close';
 
 import SearchIcon from '@material-ui/icons/Search';
 
@@ -12,6 +13,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 import {connect} from 'react-redux';
 import * as actionCreators  from '../../redux/actions/action-creators';
+import { red } from '@material-ui/core/colors';
 
 const mapStateToProps = state => ({ searchField: state.data.current.searchField,
   resource: state.data.selectedResource, displayName: state.data.current.displayName })
@@ -43,24 +45,66 @@ const useStyles = makeStyles(theme => ({
     fontFamily: theme.typography.titles,
     color: theme.palette.primary.main,
     fontWeight: 600,
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'block',
-    },
+  
+    flexGrow: 1,
+    flexShrink: 0,
+    paddingRight: theme.spacing(2),  
+      
+     
+      [theme.breakpoints.down('md')]: {
+        
+        
+        
+      },
+      [theme.breakpoints.down('sm')]: {
+    
+       
+       
+      },
+      [theme.breakpoints.down('xs')]: {
+     
+       
+        fontSize: '15px',
+     
+      },
+
+    
   },
   search: {
+    display: 'flex',
+    alignItems: 'center', 
+    justifyContent: 'flex-start',
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
     backgroundColor: fade(theme.palette.common.white, 0.15),
     '&:hover': {
       backgroundColor: fade(theme.palette.common.white, 0.25),
     },
+    // marginRight: theme.spacing(2),
+    marginLeft: -5,
     marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: '100%',
+    flexGrow: 5,
+    flexShrink: 1,
     [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(3),
-      width: 'auto',
+      marginRight: theme.spacing(0),
+      marginLeft: theme.spacing(0),
+     
+      flexShrink: 1
+    },
+    [theme.breakpoints.down('md')]: {
+     
+      flexShrink: 1
+    },
+    [theme.breakpoints.down('sm')]: {
+      marginRight: theme.spacing(0),
+      marginLeft: theme.spacing(0),
+      // width: '256%',
+      
+      maxWidth: '700px'
+    },
+    [theme.breakpoints.down('xs')]: {
+      marginRight: theme.spacing(0),
+      marginLeft: theme.spacing(0)
     },
   },
   searchIcon: {
@@ -71,16 +115,20 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    
   },
   inputRoot: {
     color: 'inherit',
+    position: "relative",
+    width: '100%',
   },
   inputInput: {
-    padding: theme.spacing(1, 1, 1, 7),
+    padding: theme.spacing(1, 0, 1, 7),
+    position: "relative",
     transition: theme.transitions.create('width'),
     width: '100%',
     [theme.breakpoints.up('md')]: {
-      width: 400,
+     
     },
   },
   sectionDesktop: {
@@ -99,11 +147,13 @@ const useStyles = makeStyles(theme => ({
 
 function SearchHeader(props) {
   const classes = useStyles();
- 
+  const [IsOnFocus, setIsOnFocus] = useState(false)
+  console.log(IsOnFocus)
   return (
     <div className={classes.grow}>
       <AppBar  classes={{root: classes.appBar}} position="static">
         <Toolbar>
+         
         <div className={classes.sectionMobile}>
           <IconButton
             onClick={props.toggleNavBar}
@@ -116,21 +166,29 @@ function SearchHeader(props) {
           </IconButton>
            
           </div>
+          {((!IsOnFocus && !props.searchField) || !props.isPhone) &&
           <Typography className={classes.title} variant="h6" noWrap>
               {props.displayName}
-          </Typography>
+          </Typography> 
+            }
+         
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
-            <InputBase onChange={(e)=>props.searchItem(e.target.value) } value={props.searchField}
-              placeholder="Search…"
+            <InputBase onFocus={()=>setIsOnFocus(true)} onBlur={()=>setIsOnFocus(false)} onChange={(e)=>props.searchItem(e.target.value) } value={props.searchField}
+              placeholder="Buscar…"
               classes={{
                 root: classes.inputRoot,
                 input: classes.inputInput,
               }}
               inputProps={{ 'aria-label': 'search' }}
             />
+            
+           {props.searchField && <div onClick={()=>props.searchItem('')} style={{display: 'flex', paddingRight: '5px'}}>
+              <CloseIcon style={{opacity: 0.45}}/>
+            </div>}
+            
           </div>
           
           <div className={classes.grow} />

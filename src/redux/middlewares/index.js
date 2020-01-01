@@ -23,13 +23,11 @@ export const populateItem =({dispatch, getState}) => next => action => {
 
         const resourceAction= new ActionResources[data.selectedResource]()
         resourceAction.createAction({type: actions.select_item_by_index, payload: itemIndex}, dispatch, getState)
-        const awaitNext = resourceAction.createAction({type: actions.populate_item, payload: {index: itemIndex, item, keysToPopulate}}, dispatch, getState, next)
+        resourceAction.createAction({type: actions.populate_item, payload: {index: itemIndex, item, keysToPopulate}}, dispatch, getState, next)
         
-        Promise.resolve(awaitNext).then((next)=>{
-                if (next) {
-                    next(action);
-                }
-         })
+       
+        
+        
  
         
 } else {
@@ -39,10 +37,10 @@ export const populateItem =({dispatch, getState}) => next => action => {
 
 export const populateResource =({dispatch, getState}) => next => action => {
     if (action.type === actions.select_resource+`[${actions.global_signature}]`) {
-      
+        next(action)
         const resourceAction= new ActionResources[action.payload]() 
         resourceAction.createAction({type: actions.populate_resource},dispatch, getState)
-        next(action)
+        
 } else {
     next(action)
 }

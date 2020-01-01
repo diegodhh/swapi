@@ -13,6 +13,7 @@ export default function (data = {resources:{}, current:{}, selectedResource:'Cha
           data = swapCurrent(data,{...action,type: actionType})
           const resource= new Resources[data.selectedResource](data.current);
           let currentState = resource.reducer({type:actionType, payload: action.payload});
+  
           return {...data, current: currentState}
         }
         

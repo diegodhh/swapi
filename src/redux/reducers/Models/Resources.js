@@ -19,9 +19,11 @@ export class Resource {
         this._state.selectedItem = selectedItem || '';
         this._state.selectedItemIndex = selectedItemIndex || 0;
         this._state.backUpSelectedItemIndex = backUpSelectedItemIndex || null;
-        this._state.nextPageLink= nextPageLink || null;
+        const thefetchedData = this.fetchedData?this.fetchedData.next: null;
+        this._state.nextPageLink= nextPageLink ||thefetchedData || null;
         this._state.fetching = false;
-        this._state.fetchedPages = fetchedPages || [];
+       
+        this._state.fetchedPages =  fetchedPages|| [];
         this.ResourseName = 'Resource'
         this._state.dataSchema =  {name: String};
 
@@ -69,7 +71,7 @@ export class Resource {
         let keysToPopulate = this.getKeysToPopulate()
 
         keysToPopulate.map((keyToPopulate)=>{
-            if (this._state.selectedItemIndex !== action.payload.index ||  Object.keys(action.payload.item[keyToPopulate][0])[0] === 'msg' ) {
+            if (this._state.selectedItemIndex !== action.payload.index ||  Object.keys(action.payload.item[keyToPopulate][0])[0] === 'msg' || !action.payload.item[keyToPopulate][0]) {
              
                 return this._state;
              
@@ -105,7 +107,9 @@ export class Resource {
         return this._state;
     }
     [actions.fetch_more] = (action) => {
-        
+        if (JSON.stringify(this._state.fetchedPages[this._state.fetchedPages.length-1]) === JSON.stringify(action.payload)) {
+            return this.state
+        }
         this._state.fetchedPages.push(action.payload);
         this._state.displayList = this._state.displayList.concat(action.payload.results); 
         this._state.nextPageLink = action.payload.next;
@@ -119,8 +123,18 @@ export class Resource {
         this._state.selectedItemIndex = action.payload;
         this._state.selectedItem = this._state.displayList[this._state.selectedItemIndex]
     }
+    [actions.select_resource] = (action) =>{
+        
+        if (this._state.fetchedData) {
+            this._state.searchField='';
+            const completeList = this._getCompleteList()
+            this._state.displayList= completeList?completeList:this._state.displayList
+        }
+        
+    }
     
     _getCompleteList = () =>{
+        
         let completeList = this._state.fetchedData.results;
          this._state.fetchedPages.forEach((item)=>{
             completeList = completeList.concat(item.results);
@@ -245,8 +259,7 @@ export class Movies extends Resource {
         this._state.dataSchema = {title: {type:String, displayName: 'Titulo'}, 
         director: {type:String, displayName: 'Director'}, 
         producer: {type:String, displayName: 'Productor'}, 
-        release_date: {type:Date, displayName: 'Fecha de estreno'},
-        characters: {type:Array, resource: 'Characters',  displayName: 'personajes'}
+        release_date: {type:Date, displayName: 'Fecha de estreno'}
     }; 
         this._state.resourceName = 'Movies'
         this._state.displayName = 'Peliculas'
@@ -261,10 +274,10 @@ export class Starships extends Resource {
         manufacturer: {type:String, displayName: 'Fabricante'}, 
         cost_in_credits: {type:Number, displayName: 'Precio'}, 
         passengers: {type:Date, displayName: 'pasajeros'},
-        films: {type:Array, resource: 'Movies',  displayName: 'Peliculas'}
+        pilots: {type:Array, resource: 'Characters',  displayName: 'Pilotos'}
     }; 
         this._state.resourceName = 'Starships'
-        this._state.displayName = 'Naves espaciales'
+        this._state.displayName = 'Naves'
     }
     
 }
@@ -306,8 +319,7 @@ export class Species extends Resource {
         eye_colors: {type:Number, displayName: 'Color de ojos'}, 
         average_lifespan: {type:Number, displayName: 'Promedio de vida'}, 
         language: {type:String, displayName: 'lenguaje'},
-        people: {type: Array, resource: "Characters", displayName: "Personajes"},
-        films: {type:Array, resource: 'Movies',  displayName: 'Peliculas'}
+        people: {type: Array, resource: "Characters", displayName: "Personajes"}
     }; 
         this._state.resourceName = 'Species'
         this._state.displayName = 'Especies'

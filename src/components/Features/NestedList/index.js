@@ -24,10 +24,12 @@ const schemaLoader= (schema, itemCallback,listCallback) =>{
       printSchema.push(itemCallback(property, schema[property], index))
     }
     if (schema[property].type === Array) {
+      
       let aux =listCallback(property,schema[property], index);
+      
       if (!aux) {
         printSchema.push((<CircularIndeterminate/>))
-        break;
+       
       }
       printSchema.push(aux)
     }
@@ -137,6 +139,9 @@ export default function NestedList({schema,item, select}) {
                 }
         ,
               (key,obj, index)=>{
+                        if ( item[key] && item[key].length === 0) {
+                          return []
+                        }
                         const firstKey = item[key] && item[key][0]?Object.keys(item[key][0])[0]:null
                         if (!firstKey || typeof(item[key][0]) === 'string' ) {
                           return false
@@ -150,7 +155,7 @@ export default function NestedList({schema,item, select}) {
                           <ListItemText primary={obj.displayName} />
                           {open ? <ExpandLess /> : <ExpandMore />}
                         </ListItem>
-                        {!item? null: item[key].map((subItem, index)=>{
+                        {!item ? null: item[key].map((subItem, index)=>{
                   if (typeof(subItem) === 'string' || !firstKey) {
                     return false
                   } 

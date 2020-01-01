@@ -123,10 +123,17 @@ useEffect(() => {
   let tag;
   if (!props.currentList.length) {
    
-    if (props.fetchedData || !props.fetching) {
-      tag = 'no se encontraron elementos'
-    } else {
-      tag = 'Loading'
+    if (!props.fetchedData && props.fetching) {
+      tag = 'Cargando...'
+    }
+    if (props.fetchedData && props.fetching) {
+      tag = 'Buscando'
+    }
+    if (props.fetchedData && !props.fetching) {
+      tag = 'No hay resultados para su busqueda'
+    }
+    if (!props.fetchedData && !props.fetching) {
+      tag = 'Error de conexion, revise su conexion a internet...'
     }
    
     

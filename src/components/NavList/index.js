@@ -106,9 +106,18 @@ const useStyles = makeStyles(theme => ({
 
 function Nav(props) {
   const [moreResourcesState, setMoreResources] = useState(false)
-  const toggleMoreResources = ()=>{
+  const handleClick = (e) => {
+   
+    if(e.target === e.currentTarget) {
+      return props.toggleNavBar? props.toggleNavBar() : null
+   }
+    
+  }
+  
+  const toggleMoreResources = (e)=>{
+    
     setMoreResources((prevState) => !prevState)
-    return props.toggleNavBar? props.toggleNavBar(): null 
+    
   }
   const classes = useStyles();
   useEffect(() => {
@@ -126,7 +135,7 @@ function Nav(props) {
 
 
   return (
-    <nav onClick={props.toggleNavBar}  className={classes.root}>
+    <nav onClick={handleClick}  className={classes.root}>
       
       <List   component="nav" aria-label="secondary mailbox folders">
       {resourcesArray.map((Resource, key)=>{
@@ -136,7 +145,7 @@ function Nav(props) {
                   if (resourceName === props.selectedResource) {
                     selected = {classes: {root: classes.selectedItem}}
                   }
-                  return (<ListItem {...selected} key={`${resourceName} ${key}`} onClick={()=>{props.selectResource(resourceName)}} button>
+                  return (<ListItem {...selected} key={`${resourceName} ${key}`} onClick={()=>{props.selectResource(resourceName); props.toggleNavBar && props.toggleNavBar()}} button>
                             <ListItemText key={`${resourceName} ${key}`} classes={{root: classes.fontStyle}}  primary={displayName} />
                           </ListItem>)
       })}

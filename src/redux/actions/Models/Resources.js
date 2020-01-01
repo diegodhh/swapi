@@ -71,10 +71,11 @@ export class Resource {
                 if (data.resources[this.ResourseName].fetchedData !== null) {
                     return;
                 }
+                if (data.current.fetching) {
+                    return;
+                }
             }
-            if (data.current.fetching) {
-                return;
-            }
+            
             
             
             
@@ -92,8 +93,7 @@ export class Resource {
                 type: actions.select_item, payload: 0 
               },dispatch,getstate)
         } catch(err) {
-            alert('este es el error')
-            console.log(err)
+  
             this[actions.conection_error](dispatch, err)
         }
        
@@ -124,11 +124,14 @@ export class Resource {
    [actions.search_item] = (action, dispatch,getstate) => {
     //this[actions.show_spin](dispatch)
         const {data} = getstate()
-        if (data.current.nextPageLink) {
-            this._searchOnline(action, dispatch,getstate)
-        } else {
-            this._searchOffLine(action, dispatch,getstate)
+        if (data.current.fetchedData) {
+            if (data.current.nextPageLink) {
+                this._searchOnline(action, dispatch,getstate)
+            } else {
+                this._searchOffLine(action, dispatch,getstate)
+            }
         }
+      
         
         
     } 
@@ -167,11 +170,11 @@ export class Resource {
     
     [actions.select_resource] = async (action, dispatch,getstate) => {
        
-        const {data} = getstate();
-        const resource = action.payload
-        if (data.current.fetching) {
-           return 
-        }
+        // const {data} = getstate();
+        // const resource = action.payload
+        // if (data.current.fetching) {
+        //    return 
+        // }
            dispatch(action, true)
          
          
@@ -208,6 +211,7 @@ export class Resource {
      [actions.populate_item] = async (action, dispatch,getstate,next) => {
         const {payload} = action
         const {item, index,keysToPopulate} = payload;
+        let isAlrredyFetched = false;
         try {
             let keys;
              await keysToPopulate.map(async (keyToPopulate)=>{
@@ -226,7 +230,8 @@ export class Resource {
                     return response.data   
                   
                     } catch(err) {
-                        console.log('errorr')
+                        isAlrredyFetched=true;
+                        return;
                     }
                    
                
@@ -234,13 +239,17 @@ export class Resource {
                 
               
             })
-            
+            if (isAlrredyFetched) {
+                // dont do anything
+                return
+            }
             item[keyToPopulate]=await Promise.all(keys)
             return item[keyToPopulate];
             })
            
           await Promise.all(keys)  
-         dispatch({
+            
+          dispatch({
             type: actions.populate_item, payload: {index, item}
         }) 
 
